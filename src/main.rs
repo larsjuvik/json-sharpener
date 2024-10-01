@@ -27,7 +27,7 @@ impl ClassContents {
         }
     }
     fn get_csharp_class(&self) -> String {
-        String::new()
+        unimplemented!()
     }
 }
 fn main() {
@@ -41,4 +41,7 @@ fn main() {
     let file_contents = fs::read_to_string(&args.file).expect("Could not read file");
     println!("> {}", args.file);
     println!("Contents:\n{}", file_contents);
+
+    let parsed_contents = ClassContents::new(&file_contents);
+    println!("Parsed:\n{}", parsed_contents.get_csharp_class());
 }
