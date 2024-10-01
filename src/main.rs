@@ -1,4 +1,6 @@
 use clap::Parser;
+use std::fs;
+use std::path::Path;
 
 /// Arguments for this program
 #[derive(Parser)]
@@ -12,8 +14,31 @@ struct Args {
     file: String,
 }
 
+/// Contains the contents this parser can convert
+struct ClassContents {
+    name: String,
+    fields: Vec<String>,
+}
+impl ClassContents {
+    fn new(raw_json: &String) -> Self {
+        Self {
+            name: String::new(),
+            fields: Vec::new(),
+        }
+    }
+    fn get_csharp_class(&self) -> String {
+        String::new()
+    }
+}
 fn main() {
     let args: Args = Args::parse();
 
-    println!("Sharpening '{}'", args.file);
+    let file_exists = Path::new(&args.file).exists();
+    if !file_exists {
+        println!("Could not find file.\n> {}", args.file);
+    }
+
+    let file_contents = fs::read_to_string(&args.file).expect("Could not read file");
+    println!("> {}", args.file);
+    println!("Contents:\n{}", file_contents);
 }
