@@ -1,16 +1,16 @@
 # JSON Sharpener
 
-[![Rust](https://github.com/larsjuvik/json-sharpener/actions/workflows/CI.yml/badge.svg)](https://github.com/larsjuvik/json-sharpener/actions/workflows/CI.yml)
+[![Build and Tests](https://github.com/larsjuvik/json-sharpener/actions/workflows/CI.yml/badge.svg)](https://github.com/larsjuvik/json-sharpener/actions/workflows/CI.yml)
 
 Sharpen your JSON files with `json-sharpener` - a CLI tool for easy conversions to `C#` classes.
 
-## Build `json-sharpener` :hammer:
+## Build :hammer:
 
 ```bash
 cargo build --release
 ```
 
-## Run `json-sharpener` :rocket:
+## Run :rocket:
 
 If you don't want to build the program and then run it in separate steps,
 you can use this one-liner:
