@@ -1,4 +1,4 @@
-use serde_json::{Map, Value};
+use serde_json::{Map, Number, Value};
 
 pub struct ClassContents {
     class_name: String,
@@ -66,11 +66,23 @@ impl ClassContents {
         match value {
             Value::Null => String::from("dynamic"),
             Value::Bool(_b) => String::from("bool"),
-            Value::Number(_n) => String::from("number"),
+            Value::Number(n) => ClassContents::get_type_from_number_value(n),
             Value::String(_s) => String::from("string"),
             Value::Array(a) => format!("{}[]", ClassContents::get_array_type(a)),
             Value::Object(_o) => String::from("object"),
         }
+    }
+    fn get_type_from_number_value(value: &Number) -> String {
+        if value.is_f64() {
+            return String::from("double");
+        } else if value.is_i64() {
+            return String::from("int");
+        }
+
+        panic!(
+            "Could not deduct number type for C#. Value: {}",
+            value.to_string()
+        )
     }
     fn get_array_type(values: &Vec<Value>) -> String {
         if values.iter().count() == 0 {
