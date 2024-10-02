@@ -11,8 +11,12 @@ use std::path::Path;
 )]
 struct Args {
     /// Path of the file to parse
-    #[arg(short = 'f', long = "file")]
+    #[arg(short, long)]
     file: String,
+
+    /// Classname of the output class
+    #[arg(short, long, default_value_t = String::from("SharpenedClass"))]
+    class_name: String,
 }
 
 /// Contains the contents this parser can convert
@@ -21,11 +25,11 @@ struct ClassContents {
     properties: Value,
 }
 impl ClassContents {
-    fn from_json(raw_json: &String) -> Self {
+    fn new(raw_json: &String, class_name: String) -> Self {
         let parsed_value: Value = ClassContents::get_parsed_properties(raw_json);
 
         Self {
-            class_name: String::from("SharpenedClass"),
+            class_name,
             properties: parsed_value,
         }
     }
@@ -44,7 +48,17 @@ impl ClassContents {
             None => panic!("Root of JSON has to be an object."),
         };
 
-        ClassContents::get_string_value_from_obj_map(root_object)
+        let mut output = String::new();
+        let class_decleration: String = format!("class {}\n{{\n", self.class_name);
+        output.push_str(class_decleration.as_str());
+
+        let properties = ClassContents::get_string_value_from_obj_map(root_object);
+        for prop in properties {
+            output.push_str(format!("    {}", prop).as_str());
+        }
+        output.push_str("}");
+
+        output
     }
     fn capitalized(val: &String) -> String {
         let first_char = val.chars().nth(0).expect("no characters").to_uppercase();
@@ -54,8 +68,8 @@ impl ClassContents {
             val.chars().skip(1).collect::<String>()
         )
     }
-    fn get_string_value_from_obj_map(string_value: &Map<String, Value>) -> String {
-        let mut lines = String::new();
+    fn get_string_value_from_obj_map(string_value: &Map<String, Value>) -> Vec<String> {
+        let mut lines = Vec::new();
 
         for (variable_name, value) in string_value {
             let line = format!(
@@ -63,7 +77,7 @@ impl ClassContents {
                 ClassContents::get_type_from_value(&value),
                 ClassContents::capitalized(variable_name)
             );
-            lines.push_str(line.as_str());
+            lines.push(line);
         }
 
         lines
@@ -109,6 +123,6 @@ fn main() {
     println!("> {}", args.file);
     println!("Contents:\n{}", file_contents);
 
-    let parsed_contents = ClassContents::from_json(&file_contents);
+    let parsed_contents = ClassContents::new(&file_contents, args.class_name);
     println!("Parsed:\n{}", parsed_contents.get_csharp_output());
 }
