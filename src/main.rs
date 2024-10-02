@@ -1,5 +1,6 @@
 use clap::Parser;
 use serde_json::{Map, Value};
+use std::fmt::format;
 use std::fs;
 use std::path::Path;
 
@@ -34,15 +35,22 @@ impl ClassContents {
         get_string_value_from_obj_map(&contents.as_object().expect("not an object"))
     }
 }
-
+fn capitalized(val: &String) -> String {
+    let first_char = val.chars().nth(0).expect("no characters").to_uppercase();
+    format!(
+        "{}{}",
+        first_char.collect::<String>(),
+        val.chars().skip(1).collect::<String>()
+    )
+}
 fn get_string_value_from_obj_map(string_value: &Map<String, Value>) -> String {
     let mut lines = String::new();
 
-    for (key, value) in string_value {
+    for (variable_name, value) in string_value {
         let line = format!(
             "public {} {} {{ get; set; }}\n",
             get_type_from_value(&value),
-            key
+            capitalized(variable_name)
         );
         lines.push_str(line.as_str());
     }
