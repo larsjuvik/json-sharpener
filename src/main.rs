@@ -1,6 +1,5 @@
 use clap::Parser;
 use serde_json::{Map, Value};
-use std::fmt::format;
 use std::fs;
 use std::path::Path;
 
@@ -22,7 +21,10 @@ struct ClassContents {
 }
 impl ClassContents {
     fn new(raw_json: &String) -> Self {
-        let parsed_value: Value = serde_json::from_str(raw_json).expect("Could not parse file");
+        let parsed_value: Value = match serde_json::from_str(raw_json) {
+            Ok(v) => v,
+            Err(e) => panic!("Could not parse file. Reason: {}", e.to_string()),
+        };
 
         Self {
             contents: parsed_value,
@@ -60,11 +62,11 @@ fn get_string_value_from_obj_map(string_value: &Map<String, Value>) -> String {
 fn get_type_from_value(value: &Value) -> String {
     match value {
         Value::Null => String::from("dynamic"),
-        Value::Bool(b) => String::from("bool"),
-        Value::Number(n) => String::from("number"),
-        Value::String(s) => String::from("string"),
+        Value::Bool(_b) => String::from("bool"),
+        Value::Number(_n) => String::from("number"),
+        Value::String(_s) => String::from("string"),
         Value::Array(a) => format!("{}[]", get_array_type(a)),
-        Value::Object(o) => String::from("object"),
+        Value::Object(_o) => String::from("object"),
     }
 }
 fn get_array_type(values: &Vec<Value>) -> String {
