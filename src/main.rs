@@ -40,10 +40,9 @@ fn get_string_value_from_obj_map(string_value: &Map<String, Value>) -> String {
 
     for (key, value) in string_value {
         let line = format!(
-            "public {} {} {{ get; set; }} = {}\n",
+            "public {} {} {{ get; set; }}\n",
             get_type_from_value(&value),
-            key,
-            get_value_from_type(&value)
+            key
         );
         lines.push_str(line.as_str());
     }
@@ -76,16 +75,6 @@ fn get_array_type(values: &Vec<Value>) -> String {
 
     // Otherwise dynamic
     String::from("dynamic")
-}
-fn get_value_from_type(value: &Value) -> String {
-    match value {
-        Value::Null => String::from("null"),
-        Value::Bool(b) => b.to_string().to_lowercase(),
-        Value::Number(n) => n.to_string(),
-        Value::String(s) => format!("\"{}\"", s),
-        Value::Array(a) => String::from("[...]"),
-        Value::Object(o) => String::from("{...}"),
-    }
 }
 
 fn main() {
