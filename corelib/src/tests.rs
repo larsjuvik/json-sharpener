@@ -1,10 +1,17 @@
-use super::*;
+use super::ClassContents;
+
+const class_name: &str = "TestClass";
 
 #[test]
-fn simple_test() {
-    let json = String::from("{ \"boolValue\": true }");
-    let result = ClassContents::new(&json, "TestClass".to_string());
+fn test_correct_bool_property() {
+    let json = r#"{ "boolValue": true }"#;
+    let expected_output = r#"class TestClass
+{
+    public bool BoolValue { get; set; }
+}"#;
 
-    let expected = "class TestClass\n{\n    public bool BoolValue { get; set; }\n}";
-    assert_eq!(result.get_csharp_output(), String::from(expected));
+    let parsed_data = ClassContents::new(&json.to_string(), class_name.to_string());
+    let output = parsed_data.get_csharp_output();
+
+    assert_eq!(output, expected_output);
 }
