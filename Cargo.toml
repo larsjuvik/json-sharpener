@@ -1,9 +1,6 @@
-workspace = { members = ["corelib"] }
-[package]
-name = "json-sharpener"
-version = "0.1.0"
-edition = "2021"
-
-[dependencies]
-clap = { version = "4.5.19", features = ["derive"] }
-corelib = { path = "./corelib" }
+[workspace]
+resolver = "2"
+members = [
+    "corelib",
+    "json-sharpener"
+]
