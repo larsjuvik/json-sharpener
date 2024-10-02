@@ -2,7 +2,16 @@
 
 Sharpen your JSON files with `json-sharpener` - a CLI tool for easy conversions to `C#` classes.
 
-## Run project :rocket:
+## Build `json-sharpener` :hammer:
+
+```bash
+cargo build --release
+```
+
+## Run `json-sharpener` :rocket:
+
+If you don't want to build the program and then run it in separate steps,
+you can use this one-liner:
 
 ```bash
 cargo run --release -- -f YOUR_TEST_FILE.json
