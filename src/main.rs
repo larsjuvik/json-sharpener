@@ -40,7 +40,7 @@ fn get_string_value_from_obj_map(string_value: &Map<String, Value>) -> String {
 
     for (key, value) in string_value {
         let line = format!(
-            "public {} {} = {}\n",
+            "public {} {} {{ get; set; }} = {}\n",
             get_type_from_value(&value),
             key,
             get_value_from_type(&value)
@@ -52,17 +52,34 @@ fn get_string_value_from_obj_map(string_value: &Map<String, Value>) -> String {
 }
 fn get_type_from_value(value: &Value) -> String {
     match value {
-        Value::Null => String::from("?"),
+        Value::Null => String::from("dynamic"),
         Value::Bool(b) => String::from("bool"),
         Value::Number(n) => String::from("number"),
         Value::String(s) => String::from("string"),
-        Value::Array(a) => String::from("[]"),
+        Value::Array(a) => format!("{}[]", get_array_type(a)),
         Value::Object(o) => String::from("object"),
     }
 }
+fn get_array_type(values: &Vec<Value>) -> String {
+    if values.iter().count() == 0 {
+        return String::from("dynamic");
+    }
+    // Check if all values in array are the similar s.t. a type can be given
+    let first_elem: &Value = values.iter().nth(0).expect("no first element");
+    let first_elem_type = get_type_from_value(first_elem);
+    if values
+        .iter()
+        .all(|v| get_type_from_value(v) == first_elem_type)
+    {
+        return first_elem_type;
+    }
+
+    // Otherwise dynamic
+    String::from("dynamic")
+}
 fn get_value_from_type(value: &Value) -> String {
     match value {
-        Value::Null => String::from("NONE"),
+        Value::Null => String::from("null"),
         Value::Bool(b) => b.to_string().to_lowercase(),
         Value::Number(n) => n.to_string(),
         Value::String(s) => format!("\"{}\"", s),
