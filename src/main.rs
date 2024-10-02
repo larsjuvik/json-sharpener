@@ -2,6 +2,7 @@ use clap::Parser;
 use serde_json::{Map, Value};
 use std::fs;
 use std::path::Path;
+use std::process::{exit, ExitStatus};
 
 /// Arguments for this program
 #[derive(Parser)]
@@ -117,6 +118,7 @@ fn main() {
     let file_exists = Path::new(&args.file).exists();
     if !file_exists {
         println!("Could not find file.\n> {}", args.file);
+        exit(1);
     }
 
     let file_contents = fs::read_to_string(&args.file).expect("Could not read file");
