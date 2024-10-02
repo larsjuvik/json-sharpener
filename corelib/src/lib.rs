@@ -76,7 +76,9 @@ impl ClassContents {
         if value.is_f64() {
             return String::from("double");
         } else if value.is_i64() {
-            return String::from("int");
+            return String::from("long");
+        } else if value.is_u64() {
+            return String::from("ulong");
         }
 
         panic!(
