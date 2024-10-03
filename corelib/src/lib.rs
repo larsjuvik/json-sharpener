@@ -73,12 +73,18 @@ impl ClassContents {
         }
     }
     fn get_type_from_number_value(value: &Number) -> String {
-        if value.is_f64() {
+        if value.is_i64() {
+            let val = value
+                .as_i64()
+                .expect(format!("Expected {} to be integer", value.to_string()).as_str());
+
+            if val > (i32::MAX as i64) {
+                return String::from("long");
+            } else {
+                return String::from("int");
+            }
+        } else if value.is_f64() {
             return String::from("double");
-        } else if value.is_i64() {
-            return String::from("long");
-        } else if value.is_u64() {
-            return String::from("ulong");
         }
 
         panic!(
