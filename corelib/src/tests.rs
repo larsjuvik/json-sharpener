@@ -32,28 +32,50 @@ fn test_correct_string_property() {
 
 #[test]
 fn test_correct_integer_property() {
-    let json = r#"{ "integerValue": 1 }"#;
+    let json = [
+        r#"{ "integerValue": 1 }"#,
+        r#"{ "integerValue": -1 }"#,
+        r#"{ "integerValue": 0 }"#,
+        r#"{ "integerValue": 2147483647 }"#,  // max int value
+        r#"{ "integerValue": -2147483648 }"#, // min int value
+    ];
     let expected_output = r#"class TestClass
 {
     public int IntegerValue { get; set; }
 }"#;
 
-    let parsed_data = ClassContents::new(&json.to_string(), CLASS_NAME.to_string());
-    let output = parsed_data.get_csharp_output();
+    let mut outputs: Vec<String> = Vec::new();
+    for j in json {
+        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string());
+        let output = parsed_data.get_csharp_output();
+        outputs.push(output);
+    }
 
-    assert_eq!(output, expected_output);
+    for o in outputs {
+        assert_eq!(o, expected_output);
+    }
 }
 
 #[test]
 fn test_correct_double_property() {
-    let json = r#"{ "doubleValue": 1.234 }"#;
+    let json = [
+        r#"{ "doubleValue": 0.0 }"#,
+        r#"{ "doubleValue": -1.0 }"#,
+        r#"{ "doubleValue": 1.0 }"#,
+    ];
     let expected_output = r#"class TestClass
 {
     public double DoubleValue { get; set; }
 }"#;
 
-    let parsed_data = ClassContents::new(&json.to_string(), CLASS_NAME.to_string());
-    let output = parsed_data.get_csharp_output();
+    let mut outputs: Vec<String> = Vec::new();
+    for j in json {
+        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string());
+        let output = parsed_data.get_csharp_output();
+        outputs.push(output);
+    }
 
-    assert_eq!(output, expected_output);
+    for o in outputs {
+        assert_eq!(o, expected_output);
+    }
 }
