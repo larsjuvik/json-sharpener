@@ -57,6 +57,29 @@ fn test_correct_integer_property() {
 }
 
 #[test]
+fn test_correct_long_property() {
+    let json = [
+        r#"{ "longValue": 2147483648 }"#,  // max int value+1
+        r#"{ "longValue": -2147483649 }"#, // min int value+1
+    ];
+    let expected_output = r#"class TestClass
+{
+    public long LongValue { get; set; }
+}"#;
+
+    let mut outputs: Vec<String> = Vec::new();
+    for j in json {
+        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string());
+        let output = parsed_data.get_csharp_output();
+        outputs.push(output);
+    }
+
+    for o in outputs {
+        assert_eq!(o, expected_output);
+    }
+}
+
+#[test]
 fn test_correct_double_property() {
     let json = [
         r#"{ "doubleValue": 0.0 }"#,

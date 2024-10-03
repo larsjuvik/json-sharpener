@@ -78,7 +78,7 @@ impl ClassContents {
                 .as_i64()
                 .expect(format!("Expected {} to be integer", value.to_string()).as_str());
 
-            if val > (i32::MAX as i64) {
+            if val < (i32::MIN as i64) || val > (i32::MAX as i64) {
                 return String::from("long");
             } else {
                 return String::from("int");
