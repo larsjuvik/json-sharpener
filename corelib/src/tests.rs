@@ -4,30 +4,47 @@ const CLASS_NAME: &str = "TestClass";
 
 #[test]
 fn test_correct_bool_property() {
-    let json = r#"{ "boolValue": true }"#;
+    let json = [r#"{ "boolValue": false }"#, r#"{ "boolValue": true }"#];
     let expected_output = r#"class TestClass
 {
     public bool BoolValue { get; set; }
 }"#;
 
-    let parsed_data = ClassContents::new(&json.to_string(), CLASS_NAME.to_string());
-    let output = parsed_data.get_csharp_output();
+    let mut outputs: Vec<String> = Vec::new();
+    for j in json {
+        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string());
+        let output = parsed_data.get_csharp_output();
+        outputs.push(output);
+    }
 
-    assert_eq!(output, expected_output);
+    for o in outputs {
+        assert_eq!(o, expected_output);
+    }
 }
 
 #[test]
 fn test_correct_string_property() {
-    let json = r#"{ "stringValue": "test" }"#;
+    let json = [
+        r#"{ "stringValue": "1" }"#,
+        r#"{ "stringValue": "" }"#,
+        r#"{ "stringValue": "abc" }"#,
+        r#"{ "stringValue": "test test" }"#,
+    ];
     let expected_output = r#"class TestClass
 {
     public string StringValue { get; set; }
 }"#;
 
-    let parsed_data = ClassContents::new(&json.to_string(), CLASS_NAME.to_string());
-    let output = parsed_data.get_csharp_output();
+    let mut outputs: Vec<String> = Vec::new();
+    for j in json {
+        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string());
+        let output = parsed_data.get_csharp_output();
+        outputs.push(output);
+    }
 
-    assert_eq!(output, expected_output);
+    for o in outputs {
+        assert_eq!(o, expected_output);
+    }
 }
 
 #[test]
