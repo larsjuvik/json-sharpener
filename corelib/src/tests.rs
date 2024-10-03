@@ -12,7 +12,8 @@ fn test_correct_bool_property() {
 
     let mut outputs: Vec<String> = Vec::new();
     for j in json {
-        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string());
+        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string())
+            .expect("could not parse json");
         let output = parsed_data.get_csharp_output();
         outputs.push(output);
     }
@@ -37,7 +38,8 @@ fn test_correct_string_property() {
 
     let mut outputs: Vec<String> = Vec::new();
     for j in json {
-        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string());
+        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string())
+            .expect("could not parse json");
         let output = parsed_data.get_csharp_output();
         outputs.push(output);
     }
@@ -63,7 +65,8 @@ fn test_correct_integer_property() {
 
     let mut outputs: Vec<String> = Vec::new();
     for j in json {
-        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string());
+        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string())
+            .expect("could not parse json");
         let output = parsed_data.get_csharp_output();
         outputs.push(output);
     }
@@ -86,7 +89,8 @@ fn test_correct_long_property() {
 
     let mut outputs: Vec<String> = Vec::new();
     for j in json {
-        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string());
+        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string())
+            .expect("could not parse json");
         let output = parsed_data.get_csharp_output();
         outputs.push(output);
     }
@@ -110,7 +114,8 @@ fn test_correct_double_property() {
 
     let mut outputs: Vec<String> = Vec::new();
     for j in json {
-        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string());
+        let parsed_data = ClassContents::new(&j.to_string(), CLASS_NAME.to_string())
+            .expect("could not parse json");
         let output = parsed_data.get_csharp_output();
         outputs.push(output);
     }

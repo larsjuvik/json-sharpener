@@ -5,18 +5,21 @@ pub struct ClassContents {
     properties: Value,
 }
 impl ClassContents {
-    pub fn new(raw_json: &String, class_name: String) -> Self {
-        let parsed_value: Value = ClassContents::get_parsed_properties(raw_json);
+    pub fn new(raw_json: &String, class_name: String) -> Result<Self, String> {
+        let parsed_value = ClassContents::get_parsed_properties(raw_json);
 
-        Self {
-            class_name,
-            properties: parsed_value,
+        match parsed_value {
+            Ok(v) => Ok(Self {
+                class_name,
+                properties: v,
+            }),
+            Err(e) => Err(e),
         }
     }
-    fn get_parsed_properties(raw_json: &String) -> Value {
+    fn get_parsed_properties(raw_json: &String) -> Result<Value, String> {
         match serde_json::from_str(raw_json) {
-            Ok(v) => v,
-            Err(e) => panic!("Could not parse file. Reason: {}", e.to_string()),
+            Ok(v) => Ok(v),
+            Err(e) => Err(format!("Could not parse file. Reason: {}", e.to_string())),
         }
     }
     pub fn get_csharp_output(&self) -> String {

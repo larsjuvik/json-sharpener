@@ -34,5 +34,8 @@ fn main() {
     println!("Contents:\n{}", file_contents);
 
     let parsed_contents = ClassContents::new(&file_contents, args.class_name);
-    println!("Parsed:\n{}", parsed_contents.get_csharp_output());
+    match parsed_contents {
+        Ok(v) => println!("Parsed:\n{}", v.get_csharp_output()),
+        Err(e) => println!("Error:\n{}", e),
+    }
 }
