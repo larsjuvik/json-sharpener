@@ -90,6 +90,18 @@ fn test_correct_double_property() {
 }
 
 #[test]
+fn test_correct_null_property() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"{ "nullValue": null }"#);
+    let expected_output = r#"class TestClass
+{
+    public object? NullValue { get; set; }
+}"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
 fn test_correct_object_array_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "arrayValue": [] }"#);
