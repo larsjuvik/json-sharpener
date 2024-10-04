@@ -88,3 +88,58 @@ fn test_correct_double_property() {
 
     bulk_parse_and_verify(json_data, &expected_output);
 }
+
+#[test]
+fn test_correct_object_array_property() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"{ "arrayValue": [] }"#);
+    let expected_output = r#"class TestClass
+{
+    public object[] ArrayValue { get; set; }
+}"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
+fn test_correct_integer_array_property() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"{ "arrayValue": [1, 2, 3] }"#);
+    json_data.push(r#"{ "arrayValue": [-1, -2, -3] }"#);
+    json_data.push(r#"{ "arrayValue": [1] }"#);
+    let expected_output = r#"class TestClass
+{
+    public int[] ArrayValue { get; set; }
+}"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
+fn test_correct_long_array_property() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"{ "arrayValue": [2147483648] }"#); // max int value + 1
+    json_data.push(r#"{ "arrayValue": [-2147483649] }"#); // min int value - 1
+    json_data.push(r#"{ "arrayValue": [2147483648, -2147483649] }"#);
+    json_data.push(r#"{ "arrayValue": [-2147483649, 1, 3] }"#);
+    let expected_output = r#"class TestClass
+{
+    public long[] ArrayValue { get; set; }
+}"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
+fn test_correct_bool_array_property() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"{ "arrayValue": [true, false] }"#);
+    json_data.push(r#"{ "arrayValue": [false] }"#);
+    json_data.push(r#"{ "arrayValue": [true] }"#);
+    let expected_output = r#"class TestClass
+{
+    public bool[] ArrayValue { get; set; }
+}"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}

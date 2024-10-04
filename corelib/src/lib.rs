@@ -126,9 +126,11 @@ impl CSharpClass {
         let first_elem_type = CSharpClass::get_type_from_value(first_elem)?;
 
         // Check if there are differing types within array
+        // We allow difference in number type, as long as first type is long, and remainder long or int
         for v in values {
             let v_type = CSharpClass::get_type_from_value(v)?;
-            if v_type != first_elem_type {
+            let first_value_is_long_v_is_int = first_elem_type == "long" && v_type == "int";
+            if v_type != first_elem_type && !first_value_is_long_v_is_int {
                 return Err("All types in array must be equal".to_string());
             }
         }
