@@ -1,3 +1,5 @@
+use serde_json::Error;
+
 use crate::CSharpClass;
 
 /// Uses input JSON data and expected output to verify that it is correctly parsed
@@ -122,12 +124,37 @@ fn test_correct_long_array_property() {
     json_data.push(r#"{ "arrayValue": [-2147483649] }"#); // min int value - 1
     json_data.push(r#"{ "arrayValue": [2147483648, -2147483649] }"#);
     json_data.push(r#"{ "arrayValue": [-2147483649, 1, 3] }"#);
+    json_data.push(r#"{ "arrayValue": [1, 2, -2147483649] }"#);
     let expected_output = r#"class TestClass
 {
     public long[] ArrayValue { get; set; }
 }"#;
 
     bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
+#[should_panic]
+/// This should panic as we can't mix long and double in array
+fn test_array_long_then_double() {
+    let json = r#"{ "arrayValue": [2147483648, 1.0] }"#.to_string();
+    let parsed = match CSharpClass::from_json(&json, "TestClass".to_string()) {
+        Ok(v) => v,
+        Err(_) => return, // if we can't parse it, return (triggering error as this function expects panic)
+    };
+    let _ = parsed.get_csharp_output().unwrap();
+}
+
+#[test]
+#[should_panic]
+/// This should panic as we can't mix double and long in array
+fn test_array_double_then_long() {
+    let json = r#"{ "arrayValue": [1.0, 2147483648] }"#.to_string();
+    let parsed = match CSharpClass::from_json(&json, "TestClass".to_string()) {
+        Ok(v) => v,
+        Err(_) => return, // if we can't parse it, return (triggering error as this function expects panic)
+    };
+    let _ = parsed.get_csharp_output().unwrap();
 }
 
 #[test]
