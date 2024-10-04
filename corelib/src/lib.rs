@@ -5,8 +5,9 @@ pub struct ClassContents {
     properties: Value,
 }
 impl ClassContents {
-    pub fn new(raw_json: &String, class_name: String) -> Result<Self, String> {
-        let parsed_value = ClassContents::get_parsed_properties(raw_json);
+    /// Attempts to parse JSON and create a [ClassContents] struct
+    pub fn new(json: &String, class_name: String) -> Result<Self, String> {
+        let parsed_value = ClassContents::get_parsed_properties(json);
 
         match parsed_value {
             Ok(v) => Ok(Self {
@@ -16,12 +17,16 @@ impl ClassContents {
             Err(e) => Err(e),
         }
     }
+
+    /// Attempts to parse raw json to a [Value]
     fn get_parsed_properties(raw_json: &String) -> Result<Value, String> {
         match serde_json::from_str(raw_json) {
             Ok(v) => Ok(v),
             Err(e) => Err(format!("Could not parse file. Reason: {}", e.to_string())),
         }
     }
+
+    /// Produces a C# class output ready to use
     pub fn get_csharp_output(&self) -> Result<String, String> {
         let properties = &self.properties;
 
@@ -44,6 +49,7 @@ impl ClassContents {
         Ok(output)
     }
 
+    /// Creates capitalized [String]
     fn capitalized(val: &String) -> Result<String, String> {
         let first_char_uppercase = match val.chars().nth(0) {
             Some(v) => v.to_uppercase(),
@@ -70,6 +76,8 @@ impl ClassContents {
 
         Ok(lines)
     }
+
+    /// Gets type from [Value]
     fn get_type_from_value(value: &Value) -> Result<String, String> {
         match value {
             Value::Null => Ok("object".to_string()),
@@ -81,6 +89,7 @@ impl ClassContents {
         }
     }
 
+    /// Gets type from [Number]
     fn get_type_from_number_value(value: &Number) -> Result<String, String> {
         if value.is_i64() {
             let val = value
@@ -102,6 +111,7 @@ impl ClassContents {
         ))
     }
 
+    /// Gets type from array with [Value]
     fn get_array_type(values: &Vec<Value>) -> Result<String, String> {
         if values.iter().count() == 0 {
             // Can't infer type
