@@ -35,7 +35,7 @@ impl ClassContents {
         let class_decleration: String = format!("class {}\n{{\n", self.class_name);
         output.push_str(class_decleration.as_str());
 
-        let properties = ClassContents::get_string_value_from_obj_map(root_object)?;
+        let properties = ClassContents::get_csharp_lines(root_object)?;
         for prop in properties {
             output.push_str(format!("    {}", prop).as_str());
         }
@@ -54,12 +54,11 @@ impl ClassContents {
         Ok(format!("{}{}", first_char_uppercase, remaining_chars))
     }
 
-    fn get_string_value_from_obj_map(
-        string_value: &Map<String, Value>,
-    ) -> Result<Vec<String>, String> {
+    /// Gets a list of csharp lines without indentation from map of string-values
+    fn get_csharp_lines(string_values: &Map<String, Value>) -> Result<Vec<String>, String> {
         let mut lines = Vec::new();
 
-        for (variable_name, value) in string_value {
+        for (variable_name, value) in string_values {
             let variable_type = ClassContents::get_type_from_value(&value)?;
             let variable_name_capitalized = ClassContents::capitalized(variable_name)?;
             let line = format!(
