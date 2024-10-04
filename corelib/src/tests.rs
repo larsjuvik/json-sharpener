@@ -1,4 +1,4 @@
-use super::CSharpClass;
+use crate::CSharpClass;
 
 /// Uses input JSON data and expected output to verify that it is correctly parsed
 fn bulk_parse_and_verify(json_data: Vec<&str>, expected_output: &str) {
