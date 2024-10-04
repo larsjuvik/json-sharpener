@@ -7,8 +7,8 @@ pub fn convert_json_to_csharp(json: &str) -> String {
     match parsed {
         Ok(v) => match v.get_csharp_output() {
             Ok(vv) => vv,
-            Err(e) => String::new(),
+            Err(_e) => String::new(),
         },
-        Err(e) => String::new(),
+        Err(_e) => String::new(),
     }
 }
