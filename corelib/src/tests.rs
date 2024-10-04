@@ -1,5 +1,3 @@
-use serde_json::Error;
-
 use crate::CSharpClass;
 
 /// Uses input JSON data and expected output to verify that it is correctly parsed
