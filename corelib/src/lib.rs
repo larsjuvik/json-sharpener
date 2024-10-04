@@ -30,10 +30,20 @@ impl CSharpClass {
     pub fn get_csharp_output(&self) -> Result<String, String> {
         let properties = &self.properties;
 
+        // Check if the root value is just an array
+        if properties.is_array() {
+            return CSharpClass::get_array_type(properties.as_array().unwrap());
+        }
+
+        // Check if the root value is just a type
+        if !properties.is_array() && !properties.is_object() {
+            return CSharpClass::get_type_from_value(properties);
+        }
+
         // Make sure the root value is an object
         let root_object = match properties.as_object() {
             Some(v) => v,
-            None => return Err("Root of JSON has to be an object".to_string()),
+            None => return Err("Could not parse JSON to object".to_string()),
         };
 
         let mut output = String::new();

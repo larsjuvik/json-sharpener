@@ -19,6 +19,68 @@ fn bulk_parse_and_verify(json_data: Vec<&str>, expected_output: &str) {
 }
 
 #[test]
+fn test_simple_null() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"null"#);
+    let expected_output = r#"object?"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
+fn test_simple_bool() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"false"#);
+    json_data.push(r#"true"#);
+    let expected_output = r#"bool"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
+fn test_simple_int() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"-1"#);
+    json_data.push(r#"0"#);
+    json_data.push(r#"1"#);
+    let expected_output = r#"int"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
+fn test_simple_long() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push("2147483648"); // max int value+1
+    json_data.push("-2147483649"); // min int value-1
+    let expected_output = "long";
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
+fn test_simple_double() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push("-1.0");
+    json_data.push("0.0");
+    json_data.push("1.0");
+    let expected_output = r#"double"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
+fn test_simple_string() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#""-1.0""#);
+    json_data.push(r#""test""#);
+    json_data.push(r#""""#);
+    let expected_output = r#"string"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
 fn test_correct_bool_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "boolValue": false }"#);
@@ -66,7 +128,7 @@ fn test_correct_integer_property() {
 fn test_correct_long_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "longValue": 2147483648 }"#); // max int value+1
-    json_data.push(r#"{ "longValue": -2147483649 }"#); // min int value+1
+    json_data.push(r#"{ "longValue": -2147483649 }"#); // min int value-1
     let expected_output = r#"class TestClass
 {
     public long LongValue { get; set; }
