@@ -26,8 +26,6 @@ COPY --from=rust-base /app/json-sharpener-wasm/pkg ./public/wasm
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
-# TODO: add wasm
-
 # Expose the Next.js default port
 EXPOSE 3000
 
