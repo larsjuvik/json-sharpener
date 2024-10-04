@@ -109,17 +109,22 @@ impl ClassContents {
             return Ok("object[]".to_string());
         }
 
-        // Check if all values in array are the similar s.t. a type can be given
-        let first_elem = values.iter().nth(0).unwrap();
+        // Parse first item within array
+        let first_elem = match values.iter().nth(0) {
+            Some(v) => v,
+            None => return Err("Could not parse first element in array".to_string()),
+        };
         let first_elem_type = ClassContents::get_type_from_value(first_elem)?;
-        if values
-            .iter()
-            .all(|v| ClassContents::get_type_from_value(v).unwrap() == first_elem_type)
-        {
-            return Ok(format!("{}[]", first_elem_type));
+
+        // Check if there are differing types within array
+        for v in values {
+            let v_type = ClassContents::get_type_from_value(v)?;
+            if v_type != first_elem_type {
+                return Err("All types in array must be equal".to_string());
+            }
         }
 
-        Ok("object[]".to_string())
+        Ok(format!("{}[]", first_elem_type))
     }
 }
 
