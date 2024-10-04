@@ -97,22 +97,23 @@ impl ClassContents {
             value.to_string()
         ))
     }
-    fn get_array_type(values: &Vec<Value>) -> String {
+    fn get_array_type(values: &Vec<Value>) -> Result<&str, String> {
         if values.iter().count() == 0 {
-            return String::from("object");
+            // Can't infer type
+            return Ok("object");
         }
+
         // Check if all values in array are the similar s.t. a type can be given
-        let first_elem: &Value = values.iter().nth(0).expect("no first element");
+        let first_elem = values.iter().nth(0).unwrap();
         let first_elem_type = ClassContents::get_type_from_value(first_elem);
         if values
             .iter()
             .all(|v| ClassContents::get_type_from_value(v) == first_elem_type)
         {
-            return first_elem_type;
+            return Ok(first_elem_type.as_str());
         }
 
-        // Otherwise object
-        String::from("object")
+        Ok("object")
     }
 }
 
