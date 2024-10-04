@@ -1,4 +1,4 @@
-use super::ClassContents;
+use super::CSharpClass;
 
 /// Uses input JSON data and expected output to verify that it is correctly parsed
 fn bulk_parse_and_verify(json_data: Vec<&str>, expected_output: &str) {
@@ -8,7 +8,7 @@ fn bulk_parse_and_verify(json_data: Vec<&str>, expected_output: &str) {
         let input = json.to_string();
         let class_name = "TestClass".to_string();
 
-        let parsed_data = ClassContents::new(&input, class_name).unwrap();
+        let parsed_data = CSharpClass::from_json(&input, class_name).unwrap();
         let output = parsed_data.get_csharp_output().unwrap();
         outputs.push(output);
     }

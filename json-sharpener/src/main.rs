@@ -1,5 +1,5 @@
 use clap::Parser;
-use corelib::ClassContents;
+use corelib::CSharpClass;
 use std::fs;
 use std::path::Path;
 use std::process::exit;
@@ -33,7 +33,7 @@ fn main() {
     println!("> {}", args.file);
     println!("Contents:\n{}", file_contents);
 
-    let parsed_contents = ClassContents::new(&file_contents, args.class_name);
+    let parsed_contents = CSharpClass::from_json(&file_contents, args.class_name);
     match parsed_contents {
         Ok(v) => match v.get_csharp_output() {
             Ok(vv) => println!("Parsed:\n{}", vv),

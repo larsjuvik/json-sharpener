@@ -1,13 +1,13 @@
 use serde_json::{Map, Number, Value};
 
-pub struct ClassContents {
+pub struct CSharpClass {
     class_name: String,
     properties: Value,
 }
-impl ClassContents {
+impl CSharpClass {
     /// Attempts to parse JSON and create a [ClassContents] struct
-    pub fn new(json: &String, class_name: String) -> Result<Self, String> {
-        let parsed_value = ClassContents::get_parsed_properties(json);
+    pub fn from_json(json: &String, class_name: String) -> Result<Self, String> {
+        let parsed_value = CSharpClass::get_parsed_properties(json);
 
         match parsed_value {
             Ok(v) => Ok(Self {
@@ -40,7 +40,7 @@ impl ClassContents {
         let class_decleration: String = format!("class {}\n{{\n", self.class_name);
         output.push_str(class_decleration.as_str());
 
-        let properties = ClassContents::get_csharp_lines(root_object)?;
+        let properties = CSharpClass::get_csharp_lines(root_object)?;
         for prop in properties {
             output.push_str(format!("    {}", prop).as_str());
         }
@@ -65,8 +65,8 @@ impl ClassContents {
         let mut lines = Vec::new();
 
         for (variable_name, value) in string_values {
-            let variable_type = ClassContents::get_type_from_value(&value)?;
-            let variable_name_capitalized = ClassContents::capitalized(variable_name)?;
+            let variable_type = CSharpClass::get_type_from_value(&value)?;
+            let variable_name_capitalized = CSharpClass::capitalized(variable_name)?;
             let line = format!(
                 "public {} {} {{ get; set; }}\n",
                 variable_type, variable_name_capitalized
@@ -82,9 +82,9 @@ impl ClassContents {
         match value {
             Value::Null => Ok("object".to_string()),
             Value::Bool(_b) => Ok("bool".to_string()),
-            Value::Number(n) => ClassContents::get_type_from_number_value(n),
+            Value::Number(n) => CSharpClass::get_type_from_number_value(n),
             Value::String(_s) => Ok("string".to_string()),
-            Value::Array(a) => ClassContents::get_array_type(a),
+            Value::Array(a) => CSharpClass::get_array_type(a),
             Value::Object(_o) => Ok("object".to_string()),
         }
     }
@@ -123,11 +123,11 @@ impl ClassContents {
             Some(v) => v,
             None => return Err("Could not parse first element in array".to_string()),
         };
-        let first_elem_type = ClassContents::get_type_from_value(first_elem)?;
+        let first_elem_type = CSharpClass::get_type_from_value(first_elem)?;
 
         // Check if there are differing types within array
         for v in values {
-            let v_type = ClassContents::get_type_from_value(v)?;
+            let v_type = CSharpClass::get_type_from_value(v)?;
             if v_type != first_elem_type {
                 return Err("All types in array must be equal".to_string());
             }
