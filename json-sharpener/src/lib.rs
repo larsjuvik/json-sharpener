@@ -145,7 +145,7 @@ impl CSharpClass {
         // At this point, all types are parsed successfully
         // Now check if all values are equal
         let mut all_equal = true; // assume try until deviation found
-        let mut all_types_unwrapped = all_types.map(|v| v.unwrap());
+        let all_types_unwrapped = all_types.map(|v| v.unwrap());
         for t in all_types_unwrapped.clone() {
             if first_elem_type != t {
                 all_equal = false;
