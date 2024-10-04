@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
 members = [
-    "corelib",
+    "corelib", "corelib-wasm",
     "json-sharpener"
 ]
