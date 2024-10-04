@@ -69,31 +69,33 @@ impl ClassContents {
         match value {
             Value::Null => String::from("object"),
             Value::Bool(_b) => String::from("bool"),
-            Value::Number(n) => ClassContents::get_type_from_number_value(n),
+            Value::Number(n) => ClassContents::get_type_from_number_value(n)
+                .expect("Could not convert Number to type")
+                .to_string(),
             Value::String(_s) => String::from("string"),
             Value::Array(a) => format!("{}[]", ClassContents::get_array_type(a)),
             Value::Object(_o) => String::from("object"),
         }
     }
-    fn get_type_from_number_value(value: &Number) -> String {
+    fn get_type_from_number_value(value: &Number) -> Result<&str, String> {
         if value.is_i64() {
             let val = value
                 .as_i64()
                 .expect(format!("Expected {} to be integer", value.to_string()).as_str());
 
             if val < (i32::MIN as i64) || val > (i32::MAX as i64) {
-                return String::from("long");
+                return Ok("long");
             } else {
-                return String::from("int");
+                return Ok("int");
             }
         } else if value.is_f64() {
-            return String::from("double");
+            return Ok("double");
         }
 
-        panic!(
+        Err(format!(
             "Could not deduct number type for C#. Value: {}",
             value.to_string()
-        )
+        ))
     }
     fn get_array_type(values: &Vec<Value>) -> String {
         if values.iter().count() == 0 {
