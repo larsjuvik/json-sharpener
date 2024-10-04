@@ -1,5 +1,5 @@
 [package]
-name = "corelib"
+name = "json-sharpener-core"
 version = "0.1.0"
 edition = "2021"
 
