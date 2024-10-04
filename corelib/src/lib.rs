@@ -64,7 +64,7 @@ impl ClassContents {
             let variable_name_capitalized = ClassContents::capitalized(variable_name)?;
             let line = format!(
                 "public {} {} {{ get; set; }}\n",
-                variable_type, variable_name
+                variable_type, variable_name_capitalized
             );
             lines.push(line);
         }
