@@ -80,7 +80,7 @@ impl CSharpClass {
     /// Gets type from [Value]
     fn get_type_from_value(value: &Value) -> Result<String, String> {
         match value {
-            Value::Null => Ok("object".to_string()),
+            Value::Null => Ok("object?".to_string()),
             Value::Bool(_b) => Ok("bool".to_string()),
             Value::Number(n) => CSharpClass::get_type_from_number_value(n),
             Value::String(_s) => Ok("string".to_string()),
@@ -115,27 +115,67 @@ impl CSharpClass {
     fn get_array_type(values: &Vec<Value>) -> Result<String, String> {
         if values.iter().count() == 0 {
             // Can't infer type
-            return Ok("object[]".to_string());
+            return Ok("object?[]".to_string());
         }
 
-        // Parse first item within array
-        let first_elem = match values.iter().nth(0) {
+        // Get first element of array
+        let first_elem: &Value = match values.iter().nth(0) {
             Some(v) => v,
             None => return Err("Could not parse first element in array".to_string()),
         };
         let first_elem_type = CSharpClass::get_type_from_value(first_elem)?;
 
-        // Check if there are differing types within array
-        // We allow difference in number type, as long as first type is long, and remainder long or int
-        for v in values {
-            let v_type = CSharpClass::get_type_from_value(v)?;
-            let first_value_is_long_v_is_int = first_elem_type == "long" && v_type == "int";
-            if v_type != first_elem_type && !first_value_is_long_v_is_int {
-                return Err("All types in array must be equal".to_string());
+        // Check if all values can be parsed
+        let all_types = values.iter().map(|v| CSharpClass::get_type_from_value(v));
+        let all_types_can_be_parsed = all_types.clone().map(|v| v.is_ok()).all(|v| v);
+        if !all_types_can_be_parsed {
+            return Err("Not all values in array can be parsed".to_string());
+        }
+
+        // At this point, all types are parsed successfully
+        // Now check if all values are equal
+        let mut all_equal = true; // assume try until deviation found
+        let mut all_types_unwrapped = all_types.map(|v| v.unwrap());
+        for t in all_types_unwrapped.clone() {
+            if first_elem_type != t {
+                all_equal = false;
             }
         }
 
-        Ok(format!("{}[]", first_elem_type))
+        // If all values equal, we know the type
+        if all_equal {
+            return Ok(format!("{}[]", first_elem_type));
+        }
+
+        // At this point, we can parse all types, but they are not equal
+        // If all values are not numeric, we get an error (we can't mix non-numeric values with numeric values)
+        let is_numeric = |f: String| f == "long" || f == "int" || f == "double";
+        let all_types_numeric = all_types_unwrapped.clone().all(|v| is_numeric(v));
+        if !all_types_numeric {
+            return Err("All types are not numeric, and type can't be deduced".to_string());
+        }
+
+        // At this point, all types in array are numeric
+        // 1. If any long found, and rest is long / int, return long
+        // 2. If a mix of double and long/int is found, return Err
+        let long_found = all_types_unwrapped.clone().any(|v| v == "long");
+        let int_found = all_types_unwrapped.clone().any(|v: String| v == "int");
+        let double_found = all_types_unwrapped.clone().any(|v: String| v == "double");
+
+        if double_found {
+            if long_found || int_found {
+                // Can't mix double and long/int
+                return Err("Can't mix double and long/int in array".to_string());
+            }
+
+            return Ok("double[]".to_string());
+        } else if long_found {
+            return Ok("long[]".to_string());
+        } else if int_found {
+            return Ok("int[]".to_string());
+        } else {
+            return Err("Could not deduce numeric type".to_string());
+        }
     }
 }
 

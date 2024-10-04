@@ -97,7 +97,7 @@ fn test_correct_object_array_property() {
     json_data.push(r#"{ "arrayValue": [] }"#);
     let expected_output = r#"class TestClass
 {
-    public object[] ArrayValue { get; set; }
+    public object?[] ArrayValue { get; set; }
 }"#;
 
     bulk_parse_and_verify(json_data, &expected_output);
