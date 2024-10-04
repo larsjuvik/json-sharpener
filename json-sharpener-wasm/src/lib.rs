@@ -1,4 +1,4 @@
-use corelib::CSharpClass;
+use json_sharpener::CSharpClass;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 #[wasm_bindgen]

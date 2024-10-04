@@ -7,5 +7,5 @@ edition = "2021"
 crate-type = ["cdylib"]
 
 [dependencies]
-corelib = { path = "../json-sharpener" }
+json-sharpener = { path = "../json-sharpener" }
 wasm-bindgen = "0.2"

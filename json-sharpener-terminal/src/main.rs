@@ -1,5 +1,5 @@
 use clap::Parser;
-use corelib::CSharpClass;
+use json_sharpener::CSharpClass;
 use std::fs;
 use std::path::Path;
 use std::process::exit;

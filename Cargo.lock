@@ -110,21 +110,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d3fd119d74b830634cea2a0f58bbd0d54540518a14397557951e79340abc28c0"
 
 [[package]]
-name = "corelib"
-version = "0.1.0"
-dependencies = [
- "serde_json",
-]
-
-[[package]]
-name = "corelib-wasm"
-version = "0.1.0"
-dependencies = [
- "corelib",
- "wasm-bindgen",
-]
-
-[[package]]
 name = "heck"
 version = "0.5.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -146,8 +131,23 @@ checksum = "49f1f14873335454500d59611f1cf4a4b0f786f9ac11f4312a78e4cf2566695b"
 name = "json-sharpener"
 version = "0.1.0"
 dependencies = [
+ "serde_json",
+]
+
+[[package]]
+name = "json-sharpener-terminal"
+version = "0.1.0"
+dependencies = [
  "clap",
- "corelib",
+ "json-sharpener",
+]
+
+[[package]]
+name = "json-sharpener-wasm"
+version = "0.1.0"
+dependencies = [
+ "json-sharpener",
+ "wasm-bindgen",
 ]
 
 [[package]]
