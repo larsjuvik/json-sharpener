@@ -73,10 +73,11 @@ impl ClassContents {
                 .expect("Could not convert Number to type")
                 .to_string(),
             Value::String(_s) => String::from("string"),
-            Value::Array(a) => format!("{}[]", ClassContents::get_array_type(a)),
+            Value::Array(a) => ClassContents::get_array_type(a).unwrap(),
             Value::Object(_o) => String::from("object"),
         }
     }
+
     fn get_type_from_number_value(value: &Number) -> Result<&str, String> {
         if value.is_i64() {
             let val = value
@@ -97,10 +98,11 @@ impl ClassContents {
             value.to_string()
         ))
     }
-    fn get_array_type(values: &Vec<Value>) -> Result<&str, String> {
+
+    fn get_array_type(values: &Vec<Value>) -> Result<String, String> {
         if values.iter().count() == 0 {
             // Can't infer type
-            return Ok("object");
+            return Ok("object[]".to_string());
         }
 
         // Check if all values in array are the similar s.t. a type can be given
@@ -110,10 +112,10 @@ impl ClassContents {
             .iter()
             .all(|v| ClassContents::get_type_from_value(v) == first_elem_type)
         {
-            return Ok(first_elem_type.as_str());
+            return Ok(format!("{}[]", first_elem_type));
         }
 
-        Ok("object")
+        Ok("object[]".to_string())
     }
 }
 
