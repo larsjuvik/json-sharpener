@@ -22,75 +22,79 @@ impl ClassContents {
             Err(e) => Err(format!("Could not parse file. Reason: {}", e.to_string())),
         }
     }
-    pub fn get_csharp_output(&self) -> String {
+    pub fn get_csharp_output(&self) -> Result<String, String> {
         let properties = &self.properties;
 
         // Make sure the root value is an object
         let root_object = match properties.as_object() {
             Some(v) => v,
-            None => panic!("Root of JSON has to be an object."),
+            None => return Err("Root of JSON has to be an object".to_string()),
         };
 
         let mut output = String::new();
         let class_decleration: String = format!("class {}\n{{\n", self.class_name);
         output.push_str(class_decleration.as_str());
 
-        let properties = ClassContents::get_string_value_from_obj_map(root_object);
+        let properties = ClassContents::get_string_value_from_obj_map(root_object)?;
         for prop in properties {
             output.push_str(format!("    {}", prop).as_str());
         }
         output.push_str("}");
 
-        output
+        Ok(output)
     }
-    fn capitalized(val: &String) -> String {
-        let first_char = val.chars().nth(0).expect("no characters").to_uppercase();
-        format!(
-            "{}{}",
-            first_char.collect::<String>(),
-            val.chars().skip(1).collect::<String>()
-        )
+
+    fn capitalized(val: &String) -> Result<String, String> {
+        let first_char_uppercase = match val.chars().nth(0) {
+            Some(v) => v.to_uppercase(),
+            None => return Err(format!("Could not find first char of \"{}\"", val)),
+        };
+        let remaining_chars = val.chars().skip(1).collect::<String>();
+
+        Ok(format!("{}{}", first_char_uppercase, remaining_chars))
     }
-    fn get_string_value_from_obj_map(string_value: &Map<String, Value>) -> Vec<String> {
+
+    fn get_string_value_from_obj_map(
+        string_value: &Map<String, Value>,
+    ) -> Result<Vec<String>, String> {
         let mut lines = Vec::new();
 
         for (variable_name, value) in string_value {
+            let variable_type = ClassContents::get_type_from_value(&value)?;
+            let variable_name_capitalized = ClassContents::capitalized(variable_name)?;
             let line = format!(
                 "public {} {} {{ get; set; }}\n",
-                ClassContents::get_type_from_value(&value),
-                ClassContents::capitalized(variable_name)
+                variable_type, variable_name
             );
             lines.push(line);
         }
 
-        lines
+        Ok(lines)
     }
-    fn get_type_from_value(value: &Value) -> String {
+    fn get_type_from_value(value: &Value) -> Result<String, String> {
         match value {
-            Value::Null => String::from("object"),
-            Value::Bool(_b) => String::from("bool"),
-            Value::Number(n) => ClassContents::get_type_from_number_value(n)
-                .expect("Could not convert Number to type")
-                .to_string(),
-            Value::String(_s) => String::from("string"),
-            Value::Array(a) => ClassContents::get_array_type(a).unwrap(),
-            Value::Object(_o) => String::from("object"),
+            Value::Null => Ok("object".to_string()),
+            Value::Bool(_b) => Ok("bool".to_string()),
+            Value::Number(n) => ClassContents::get_type_from_number_value(n),
+            Value::String(_s) => Ok("string".to_string()),
+            Value::Array(a) => ClassContents::get_array_type(a),
+            Value::Object(_o) => Ok("object".to_string()),
         }
     }
 
-    fn get_type_from_number_value(value: &Number) -> Result<&str, String> {
+    fn get_type_from_number_value(value: &Number) -> Result<String, String> {
         if value.is_i64() {
             let val = value
                 .as_i64()
                 .expect(format!("Expected {} to be integer", value.to_string()).as_str());
 
             if val < (i32::MIN as i64) || val > (i32::MAX as i64) {
-                return Ok("long");
+                return Ok("long".to_string());
             } else {
-                return Ok("int");
+                return Ok("int".to_string());
             }
         } else if value.is_f64() {
-            return Ok("double");
+            return Ok("double".to_string());
         }
 
         Err(format!(
@@ -107,10 +111,10 @@ impl ClassContents {
 
         // Check if all values in array are the similar s.t. a type can be given
         let first_elem = values.iter().nth(0).unwrap();
-        let first_elem_type = ClassContents::get_type_from_value(first_elem);
+        let first_elem_type = ClassContents::get_type_from_value(first_elem)?;
         if values
             .iter()
-            .all(|v| ClassContents::get_type_from_value(v) == first_elem_type)
+            .all(|v| ClassContents::get_type_from_value(v).unwrap() == first_elem_type)
         {
             return Ok(format!("{}[]", first_elem_type));
         }
