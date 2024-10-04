@@ -134,6 +134,36 @@ fn test_correct_long_array_property() {
 }
 
 #[test]
+fn test_correct_double_array_property() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"{ "arrayValue": [1.0] }"#);
+    json_data.push(r#"{ "arrayValue": [299993.2] }"#);
+    json_data.push(r#"{ "arrayValue": [-3648.99] }"#);
+    json_data.push(r#"{ "arrayValue": [0.9999999, 0.00000001] }"#);
+    json_data.push(r#"{ "arrayValue": [0.0000001] }"#);
+    let expected_output = r#"class TestClass
+{
+    public double[] ArrayValue { get; set; }
+}"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
+fn test_correct_bool_array_property() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"{ "arrayValue": [true, false] }"#);
+    json_data.push(r#"{ "arrayValue": [false] }"#);
+    json_data.push(r#"{ "arrayValue": [true] }"#);
+    let expected_output = r#"class TestClass
+{
+    public bool[] ArrayValue { get; set; }
+}"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
 #[should_panic]
 /// This should panic as we can't mix long and double in array
 fn test_array_long_then_double() {
@@ -155,18 +185,4 @@ fn test_array_double_then_long() {
         Err(_) => return, // if we can't parse it, return (triggering error as this function expects panic)
     };
     let _ = parsed.get_csharp_output().unwrap();
-}
-
-#[test]
-fn test_correct_bool_array_property() {
-    let mut json_data: Vec<&str> = Vec::new();
-    json_data.push(r#"{ "arrayValue": [true, false] }"#);
-    json_data.push(r#"{ "arrayValue": [false] }"#);
-    json_data.push(r#"{ "arrayValue": [true] }"#);
-    let expected_output = r#"class TestClass
-{
-    public bool[] ArrayValue { get; set; }
-}"#;
-
-    bulk_parse_and_verify(json_data, &expected_output);
 }
