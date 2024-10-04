@@ -67,7 +67,7 @@ impl ClassContents {
     }
     fn get_type_from_value(value: &Value) -> String {
         match value {
-            Value::Null => String::from("dynamic"),
+            Value::Null => String::from("object"),
             Value::Bool(_b) => String::from("bool"),
             Value::Number(n) => ClassContents::get_type_from_number_value(n),
             Value::String(_s) => String::from("string"),
@@ -97,7 +97,7 @@ impl ClassContents {
     }
     fn get_array_type(values: &Vec<Value>) -> String {
         if values.iter().count() == 0 {
-            return String::from("dynamic");
+            return String::from("object");
         }
         // Check if all values in array are the similar s.t. a type can be given
         let first_elem: &Value = values.iter().nth(0).expect("no first element");
@@ -109,8 +109,8 @@ impl ClassContents {
             return first_elem_type;
         }
 
-        // Otherwise dynamic
-        String::from("dynamic")
+        // Otherwise object
+        String::from("object")
     }
 }
 
