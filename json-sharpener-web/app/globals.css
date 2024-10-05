@@ -14,7 +14,13 @@
   }
 }
 
+html {
+  min-height: -webkit-fill-available;
+}
 body {
+  height: 100dvh;
+  min-height: 100dvh;
+  min-height: -webkit-fill-available;
   color: var(--foreground);
   background: var(--background);
   font-family: Roboto, Helvetica, sans-serif;
