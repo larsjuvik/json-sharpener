@@ -4,7 +4,6 @@ import { ChangeEvent, useState } from "react";
 
 export default function Home() {
   const [libraryLoaded, setLibraryLoaded] = useState(false);
-  const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
 
   async function loadLibrary() {
