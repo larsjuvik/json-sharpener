@@ -55,7 +55,7 @@ export default function Home() {
   }, [inputText]);
 
   return (
-    <div className="ms-auto me-auto items-center justify-items-center min-h-screen p-8 gap-16 sm:p-10 max-w-6xl">
+    <div className="ms-auto me-auto flex flex-col items-center justify-items-between min-h-screen p-8 pb-0 gap-16 sm:p-10 sm:pb-0 max-w-6xl">
       <main className="flex flex-col gap-8 row-start-2 items-stretch">
         <div>
           <h1 className="text-lg">JSON Sharpener</h1>
@@ -91,6 +91,20 @@ export default function Home() {
           />
         </div>
       </main>
+      <footer className="w-full text-white py-2 text-center mt-auto">
+        <p className="text-xs">
+          © 2024 JSON Sharpener. All rights reserved.{" "}
+          <span
+            className="font-bold hover:cursor-pointer"
+            onClick={() =>
+              alert(
+                'This tool is provided "as-is" without any warranties or guarantees. We are not liable for any errors or damages. Errors can occur, always double check the results. Use at your own risk.'
+              )
+            }>
+            See disclaimer
+          </span>
+        </p>
+      </footer>
     </div>
   );
 }
