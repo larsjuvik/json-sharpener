@@ -56,7 +56,7 @@ export default function Home() {
 
   return (
     <div className="ms-auto me-auto flex flex-col items-center justify-items-between min-h-screen p-8 pb-0 gap-16 sm:p-10 sm:pb-0 max-w-6xl">
-      <main className="flex flex-col gap-8 row-start-2 items-stretch">
+      <main className="w-full flex flex-col gap-8 row-start-2 items-stretch">
         <div>
           <h1 className="text-lg">JSON Sharpener</h1>
           <h2 className=" text-sm">
