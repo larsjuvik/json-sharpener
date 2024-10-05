@@ -2,7 +2,7 @@
 import { ChangeEvent, useEffect, useState } from "react";
 import Editor from "react-simple-code-editor";
 import Prism, { highlight } from "prismjs";
-import "prismjs/themes/prism.css";
+import "prismjs/themes/prism-okaidia.css";
 import "prismjs/components/prism-json";
 import "prismjs/components/prism-csharp";
 
@@ -50,8 +50,10 @@ export default function Home() {
   return (
     <div className="items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <h1>JSON Sharpener</h1>
-        <h2>WASM Library Loaded</h2>
+        <div>
+          <h1>JSON Sharpener</h1>
+          <h2>Powered by Rust and WebAssembly</h2>
+        </div>
         <div className="flex flex-1 flex-row justify-between gap-5">
           <Editor
             className="border border-purple-700 rounded w-max bg-slate-800"
