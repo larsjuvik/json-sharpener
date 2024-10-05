@@ -1,3 +1,6 @@
+// The "@ts-nocheck" is in place to hide warning from import line of WASM library
+// This is because this gets loaded on Docker build time, and is not present now
+// @ts-nocheck
 "use client";
 import init, { convert_json_to_csharp } from "@/lib/wasm/json_sharpener_wasm";
 import { ChangeEvent, useState } from "react";
