@@ -55,15 +55,17 @@ export default function Home() {
   }, [inputText]);
 
   return (
-    <div className="items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
+    <div className="ms-auto me-auto items-center justify-items-center min-h-screen p-8 gap-16 sm:p-10 max-w-6xl">
+      <main className="flex flex-col gap-8 row-start-2 items-stretch">
         <div>
-          <h1>JSON Sharpener</h1>
-          <h2>Powered by Rust and WebAssembly</h2>
+          <h1 className="text-lg text-purple-700">JSON Sharpener</h1>
+          <h2 className=" text-sm text-orange-700">
+            Powered by Rust and WebAssembly
+          </h2>
         </div>
-        <div className="flex flex-1 flex-row justify-between gap-5">
+        <div className="flex flex-1 flex-col sm:flex-row items-stretch justify-between gap-5 md:gap-10">
           <Editor
-            className="border border-purple-700 rounded w-max bg-slate-800"
+            className="border border-purple-700 rounded flex-1 bg-slate-800"
             value={inputText}
             onValueChange={(code) => setInputText(code)}
             highlight={(code) => highlight(code, Prism.languages.json, "json")}
@@ -74,7 +76,7 @@ export default function Home() {
             }}
           />
           <Editor
-            className="border border-purple-700 rounded w-max bg-slate-800"
+            className="border border-purple-700 rounded flex-1 bg-slate-800"
             value={outputText}
             onValueChange={(code) => setOutputText(code)}
             highlight={(code) =>
@@ -88,7 +90,6 @@ export default function Home() {
           />
         </div>
       </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
     </div>
   );
 }
