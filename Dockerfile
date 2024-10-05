@@ -20,7 +20,7 @@ COPY ./json-sharpener-web/*.json .
 RUN npm install
 
 COPY ./json-sharpener-web/ .
-COPY --from=rust-base /app/json-sharpener-wasm/pkg/* ./app/lib/wasm/
+COPY --from=rust-base /app/json-sharpener-wasm/pkg/*.ts /app/json-sharpener-wasm/pkg/*.wasm /app/json-sharpener-wasm/pkg/*.js ./public/wasm/
 
 # Build
 ENV NEXT_TELEMETRY_DISABLED=1
