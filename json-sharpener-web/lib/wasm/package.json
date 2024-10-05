@@ -1,0 +1,15 @@
+{
+  "name": "json-sharpener-wasm",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "json_sharpener_wasm_bg.wasm",
+    "json_sharpener_wasm.js",
+    "json_sharpener_wasm.d.ts"
+  ],
+  "main": "json_sharpener_wasm.js",
+  "types": "json_sharpener_wasm.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
