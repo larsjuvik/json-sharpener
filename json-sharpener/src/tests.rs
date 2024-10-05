@@ -258,3 +258,15 @@ fn test_array_double_then_long() {
     };
     let _ = parsed.get_csharp_output().unwrap();
 }
+
+#[test]
+#[should_panic]
+/// This should panic as we can't mix long and double in array
+fn test_very_large_number_fails() {
+    let json = r#"{ "largeNumber": 21474234234234234234223423423423483648 }"#.to_string();
+    let parsed = match CSharpClass::from_json(&json, "TestClass".to_string()) {
+        Ok(v) => v,
+        Err(_) => return, // if we can't parse it, return (triggering error as this function expects panic)
+    };
+    let _ = parsed.get_csharp_output().unwrap();
+}
