@@ -1,12 +1,15 @@
-// The "@ts-nocheck" is in place to hide warning from import line of WASM library
-// This is because this gets loaded on Docker build time, and is not present now
-// @ts-nocheck
 "use client";
-import init, { convert_json_to_csharp } from "@/lib/wasm/json_sharpener_wasm";
 import { ChangeEvent, useState } from "react";
+import Editor from "react-simple-code-editor";
+import Prism, { highlight } from "prismjs";
+import "prismjs/themes/prism.css";
+import "prismjs/components/prism-json";
+import "prismjs/components/prism-csharp";
+import init, { convert_json_to_csharp } from "@/lib/wasm/json_sharpener_wasm";
 
 export default function Home() {
   const [libraryLoaded, setLibraryLoaded] = useState(false);
+  const [inputText, setInputText] = useState("");
   const [outputText, setOutputText] = useState("");
 
   async function loadLibrary() {
@@ -27,13 +30,30 @@ export default function Home() {
         <h1>JSON Sharpener</h1>
         <h2>WASM Library Loaded: {libraryLoaded}</h2>
         <div className="flex flex-row gap-10">
-          <textarea
-            className="resize rounded border border-purple-600 bg-slate-700 text-blue-500"
-            onChange={inputTextChanged}></textarea>
-          <textarea
-            className="resize rounded border border-purple-600 bg-slate-700 text-blue-500"
+          <Editor
+            value={inputText}
+            onValueChange={(code) => setInputText(code)}
+            highlight={(code) =>
+              highlight(code, Prism.languages.csharp, "csharp")
+            }
+            padding={10}
+            style={{
+              fontFamily: "monospace",
+              fontSize: 12,
+            }}
+          />
+          <Editor
             value={outputText}
-            readOnly></textarea>
+            onValueChange={(code) => setOutputText(code)}
+            highlight={(code) =>
+              Prism.highlight(code, Prism.languages.json, "json")
+            }
+            padding={10}
+            style={{
+              fontFamily: "monospace",
+              fontSize: 12,
+            }}
+          />
         </div>
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center"></footer>
