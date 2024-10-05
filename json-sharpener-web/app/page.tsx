@@ -7,7 +7,12 @@ import "prismjs/components/prism-json";
 import "prismjs/components/prism-csharp";
 
 export default function Home() {
-  const [inputText, setInputText] = useState("");
+  const [inputText, setInputText] = useState(`{
+    "name": "Tester",
+    "age": 25,
+    "isHappy": true,
+    "dinners": ["pizza", "taco"]
+}`);
   const [outputText, setOutputText] = useState("");
 
   const [convertJsonToCSharp, setConvertJsonToCSharp] = useState<
@@ -32,6 +37,7 @@ export default function Home() {
     loadWasm().then((r) => {
       if (r !== undefined) {
         setConvertJsonToCSharp(() => r);
+        setOutputText(r(inputText));
       }
     });
   }, []);
