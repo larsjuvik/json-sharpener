@@ -48,13 +48,13 @@ export default function Home() {
   }, [inputText]);
 
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+    <div className="items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         <h1>JSON Sharpener</h1>
         <h2>WASM Library Loaded</h2>
-        <div className="flex flex-row gap-10">
+        <div className="flex flex-1 flex-row justify-between gap-5">
           <Editor
-            className="bg-white w-52"
+            className="border border-purple-700 rounded w-max bg-slate-800"
             value={inputText}
             onValueChange={(code) => setInputText(code)}
             highlight={(code) => highlight(code, Prism.languages.json, "json")}
@@ -65,7 +65,7 @@ export default function Home() {
             }}
           />
           <Editor
-            className="bg-white w-52"
+            className="border border-purple-700 rounded w-max bg-slate-800"
             value={outputText}
             onValueChange={(code) => setOutputText(code)}
             highlight={(code) =>
