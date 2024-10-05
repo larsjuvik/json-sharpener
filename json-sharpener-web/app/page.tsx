@@ -44,7 +44,14 @@ export default function Home() {
 
   useEffect(() => {
     if (convertJsonToCSharp === undefined) return;
-    setOutputText(convertJsonToCSharp(inputText));
+
+    const csharpText = convertJsonToCSharp(inputText);
+    if (!csharpText && inputText) {
+      // Conversion not available
+      setOutputText("Enter valid JSON");
+    } else {
+      setOutputText(csharpText);
+    }
   }, [inputText]);
 
   return (
