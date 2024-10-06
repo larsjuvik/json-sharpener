@@ -4,6 +4,13 @@
 
 Sharpen your JSON files with `json-sharpener` - a CLI tool for easy conversions to `C#` classes.
 
+## Overview
+
+- `json-sharpener` - the core library for parsing JSON to C#
+- `json-sharpener-terminal` - terminal parser that uses the core library
+- `json-sharpener-wasm` - a WebAssembly wrapper around the core library
+- `json-sharpener-web` - website that uses the WebAssembly core library
+
 ## Run :rocket:
 
 ### Terminal
