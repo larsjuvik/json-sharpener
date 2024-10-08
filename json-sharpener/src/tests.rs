@@ -125,6 +125,23 @@ fn test_correct_integer_property() {
 }
 
 #[test]
+fn test_correct_object_property() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"{ "val": { "doubleValue": 123.0 } }"#);
+    let expected_output = r#"class TestClass
+{
+    public ValClass Val { get; set; }
+}
+
+class ValClass
+{
+    public double DoubleValue { get; set; }
+}"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
 fn test_correct_long_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "longValue": 2147483648 }"#); // max int value+1
