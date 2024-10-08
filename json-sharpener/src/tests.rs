@@ -261,12 +261,14 @@ fn test_array_double_then_long() {
 
 #[test]
 #[should_panic]
-/// This should panic as we can't mix long and double in array
-fn test_very_large_number_fails() {
-    let json = r#"{ "largeNumber": 21474234234234234234223423423423483648 }"#.to_string();
-    let parsed = match CSharpClass::from_json(&json, "TestClass".to_string()) {
-        Ok(v) => v,
-        Err(_) => return, // if we can't parse it, return (triggering error as this function expects panic)
-    };
-    let _ = parsed.get_csharp_output().unwrap();
+fn test_very_large_number_panics() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"{ "value": 12344567891243456789 }"#);
+    json_data.push(r#"{ "value": -12344567891243456789 }"#);
+    let expected_output = r#"class TestClass
+{
+    public double Value { get; set; }
+}"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
 }
