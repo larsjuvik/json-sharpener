@@ -1,4 +1,4 @@
-# JSON Sharpener {🔪}
+# JSON Sharpener {⚡️}
 
 [![Build and Tests](https://github.com/larsjuvik/json-sharpener/actions/workflows/CI.yml/badge.svg)](https://github.com/larsjuvik/json-sharpener/actions/workflows/CI.yml)
 
