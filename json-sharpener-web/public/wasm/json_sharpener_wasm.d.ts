@@ -5,12 +5,19 @@
 * @returns {string}
 */
 export function convert_json_to_csharp(json: string): string;
+/**
+* Returns error string if error occured, otherwise an empty string
+* @param {string} json
+* @returns {string}
+*/
+export function convert_json_to_csharp_error(json: string): string;
 
 export type InitInput = RequestInfo | URL | Response | BufferSource | WebAssembly.Module;
 
 export interface InitOutput {
   readonly memory: WebAssembly.Memory;
   readonly convert_json_to_csharp: (a: number, b: number, c: number) => void;
+  readonly convert_json_to_csharp_error: (a: number, b: number, c: number) => void;
   readonly __wbindgen_add_to_stack_pointer: (a: number) => number;
   readonly __wbindgen_malloc: (a: number, b: number) => number;
   readonly __wbindgen_realloc: (a: number, b: number, c: number, d: number) => number;

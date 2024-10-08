@@ -14,21 +14,32 @@ export default function Home() {
     "dinners": ["pizza", "taco"]
 }`);
   const [outputText, setOutputText] = useState("");
+  const [errorText, setErrorText] = useState<string | undefined>();
 
   const [convertJsonToCSharp, setConvertJsonToCSharp] = useState<
+    undefined | ((json: string) => string)
+  >();
+  const [convertJsonToCSharpError, setConvertJsonToCSharpError] = useState<
     undefined | ((json: string) => string)
   >();
 
   // Load WASM library
   useEffect(() => {
     const loadWasm = async (): Promise<
-      undefined | ((json: string) => string)
+      | undefined
+      | {
+          convert: (json: string) => string;
+          convertError: (json: string) => string;
+        }
     > => {
       try {
         const libraryModule = await import("@/public/wasm/json_sharpener_wasm");
         const libUrl = "/wasm/json_sharpener_wasm_bg.wasm";
         await libraryModule.default(libUrl);
-        return libraryModule.convert_json_to_csharp;
+        return {
+          convert: libraryModule.convert_json_to_csharp,
+          convertError: libraryModule.convert_json_to_csharp_error,
+        };
       } catch (error) {
         console.error("Failed to load WASM module", error);
       }
@@ -36,14 +47,16 @@ export default function Home() {
 
     loadWasm().then((r) => {
       if (r !== undefined) {
-        setConvertJsonToCSharp(() => r);
-        setOutputText(r(inputText));
+        setConvertJsonToCSharp(() => r.convert);
+        setConvertJsonToCSharpError(() => r.convertError);
+        setOutputText(r.convert(inputText));
       }
     });
   }, []);
 
   useEffect(() => {
     if (convertJsonToCSharp === undefined) return;
+    if (convertJsonToCSharpError === undefined) return;
 
     const csharpText = convertJsonToCSharp(inputText);
     if (!csharpText && inputText) {
@@ -52,6 +65,8 @@ export default function Home() {
     } else {
       setOutputText(csharpText);
     }
+
+    setErrorText(convertJsonToCSharpError(inputText) ?? "");
   }, [inputText]);
 
   return (
@@ -90,6 +105,7 @@ export default function Home() {
             }}
           />
         </div>
+        <p className="text-amber-700">{errorText}</p>
       </main>
       <footer className="w-full text-white py-2 text-center mt-auto">
         <p className="text-xs">
