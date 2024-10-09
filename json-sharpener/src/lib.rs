@@ -37,7 +37,7 @@ impl CSharpClass {
 
         // Check if the root value is just a type
         if !properties.is_array() && !properties.is_object() {
-            return CSharpClass::get_type_from_value(properties);
+            return CSharpClass::get_type_from_value(&String::new(), properties);
         }
 
         // Make sure the root value is an object
@@ -46,19 +46,79 @@ impl CSharpClass {
             None => return Err("Could not parse JSON to object".to_string()),
         };
 
+        // Get all objects present in structure
+        let objects: Vec<(String, &Value)> =
+            CSharpClass::get_class_names_and_values(root_object, 0).unwrap();
+
+        let mut output = String::new();
+        let first_class_string = CSharpClass::get_csharp_class(
+            properties,
+            &CSharpClass::capitalized(&self.class_name).unwrap(),
+        );
+        output.push_str(first_class_string.unwrap().as_str());
+        for object in objects {
+            output.push_str("\n\n");
+            let class_string = CSharpClass::get_csharp_class(
+                &object.1,
+                &format!("{}Class", CSharpClass::capitalized(&object.0).unwrap()).to_string(),
+            )
+            .unwrap();
+            output.push_str(class_string.as_str());
+        }
+
+        Ok(output)
+    }
+
+    fn get_class_names_and_values(
+        root_object: &Map<String, Value>,
+        current_depth: u32,
+    ) -> Result<Vec<(String, &Value)>, String> {
+        if current_depth >= 10 {
+            return Err("Reached maximum depth on objects in JSON".to_string());
+        }
+        let mut class_names_and_values: Vec<(String, &Value)> = Vec::new();
+
+        for (field_name, field_value) in root_object {
+            if field_value.is_object() {
+                // Add object to list
+                let field_value_as_obj = field_value.as_object().unwrap();
+                class_names_and_values.push((field_name.to_string(), &field_value));
+
+                // Add sub objects to result
+                let sub_objects =
+                    CSharpClass::get_class_names_and_values(field_value_as_obj, current_depth + 1)
+                        .unwrap();
+                for sub_obj in sub_objects {
+                    class_names_and_values.push(sub_obj);
+                }
+            }
+        }
+
+        Ok(class_names_and_values)
+    }
+
+    /// Returns a C# class string from a value
+    /// The value needs to be an object, otherwise an Error is returned
+    fn get_csharp_class(val: &Value, class_name: &String) -> Result<String, String> {
         let mut output = String::new();
 
-        // Add main class with fields
-        let class_decleration: String = format!("class {}\n{{\n", self.class_name);
+        // Class decleration
+        let class_decleration: String = format!("class {}\n{{\n", class_name);
         output.push_str(class_decleration.as_str());
 
-        let properties = CSharpClass::get_csharp_properties(root_object)?;
+        // Add properties
+        let properties_map = match val.as_object() {
+            Some(v) => v,
+            None => return Err("Could not parse JSON to object".to_string()),
+        };
+        let properties = CSharpClass::get_csharp_properties(properties_map)?;
         for prop in properties {
             output.push_str(format!("    {}", prop).as_str());
         }
-        output.push_str("}");
 
-        Ok(output)
+        // End bracket
+        output.push_str("}");
+        return Ok(output);
     }
 
     /// Creates capitalized [String]
@@ -77,7 +137,7 @@ impl CSharpClass {
         let mut lines = Vec::new();
 
         for (variable_name, value) in string_values {
-            let variable_type = CSharpClass::get_type_from_value(&value)?;
+            let variable_type = CSharpClass::get_type_from_value(&variable_name, &value)?;
             let variable_name_capitalized = CSharpClass::capitalized(variable_name)?;
             let line = format!(
                 "public {} {} {{ get; set; }}\n",
@@ -90,14 +150,17 @@ impl CSharpClass {
     }
 
     /// Gets type from [Value]
-    fn get_type_from_value(value: &Value) -> Result<String, String> {
+    fn get_type_from_value(field_name: &String, value: &Value) -> Result<String, String> {
         match value {
             Value::Null => Ok("object?".to_string()),
             Value::Bool(_b) => Ok("bool".to_string()),
             Value::Number(n) => CSharpClass::get_type_from_number_value(n),
             Value::String(_s) => Ok("string".to_string()),
             Value::Array(a) => CSharpClass::get_array_type(a),
-            Value::Object(_o) => Ok("object".to_string()),
+            Value::Object(_o) => Ok(format!(
+                "{}Class",
+                CSharpClass::capitalized(field_name).unwrap()
+            )),
         }
     }
 
@@ -135,10 +198,12 @@ impl CSharpClass {
             Some(v) => v,
             None => return Err("Could not parse first element in array".to_string()),
         };
-        let first_elem_type = CSharpClass::get_type_from_value(first_elem)?;
+        let first_elem_type = CSharpClass::get_type_from_value(&String::new(), first_elem)?;
 
         // Check if all values can be parsed
-        let all_types = values.iter().map(|v| CSharpClass::get_type_from_value(v));
+        let all_types = values
+            .iter()
+            .map(|v| CSharpClass::get_type_from_value(&String::new(), v));
         let all_types_can_be_parsed = all_types.clone().map(|v| v.is_ok()).all(|v| v);
         if !all_types_can_be_parsed {
             return Err("Not all values in array can be parsed".to_string());
