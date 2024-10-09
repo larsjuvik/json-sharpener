@@ -19,7 +19,7 @@ pub fn convert_json_to_csharp_error(json: &str) -> String {
     let parsed = CSharpClass::from_json(&json.to_string(), "MyClass".to_string());
     match parsed {
         Ok(v) => match v.get_csharp_output() {
-            Ok(vv) => String::new(),
+            Ok(_vv) => String::new(),
             Err(_e) => _e,
         },
         Err(_e) => _e,
