@@ -47,10 +47,12 @@ impl CSharpClass {
         };
 
         let mut output = String::new();
+
+        // Add main class with fields
         let class_decleration: String = format!("class {}\n{{\n", self.class_name);
         output.push_str(class_decleration.as_str());
 
-        let properties = CSharpClass::get_csharp_lines(root_object)?;
+        let properties = CSharpClass::get_csharp_properties(root_object)?;
         for prop in properties {
             output.push_str(format!("    {}", prop).as_str());
         }
@@ -71,7 +73,7 @@ impl CSharpClass {
     }
 
     /// Gets a list of csharp lines without indentation from map of string-values
-    fn get_csharp_lines(string_values: &Map<String, Value>) -> Result<Vec<String>, String> {
+    fn get_csharp_properties(string_values: &Map<String, Value>) -> Result<Vec<String>, String> {
         let mut lines = Vec::new();
 
         for (variable_name, value) in string_values {
