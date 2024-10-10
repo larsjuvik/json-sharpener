@@ -60,7 +60,7 @@ impl CSharpClass {
             output.push_str("\n\n");
             let class_string = CSharpClass::get_csharp_class(
                 &object.1,
-                &format!("{}Class", CSharpClass::capitalized(&object.0).unwrap()).to_string(),
+                &format!("{}", CSharpClass::capitalized(&object.0).unwrap()).to_string(),
             )
             .unwrap();
             output.push_str(class_string.as_str());
@@ -190,10 +190,7 @@ impl CSharpClass {
             Value::Number(n) => CSharpClass::get_type_from_number_value(n),
             Value::String(_s) => Ok("string".to_string()),
             Value::Array(a) => CSharpClass::get_array_type(field_name, a),
-            Value::Object(_o) => Ok(format!(
-                "{}Class",
-                CSharpClass::capitalized(field_name).unwrap()
-            )),
+            Value::Object(_o) => Ok(format!("{}", CSharpClass::capitalized(field_name).unwrap())),
         }
     }
 

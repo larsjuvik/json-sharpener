@@ -6,7 +6,7 @@ fn bulk_parse_and_verify(json_data: Vec<&str>, expected_output: &str) {
 
     for json in json_data {
         let input = json.to_string();
-        let class_name = "TestClass".to_string();
+        let class_name = "Test".to_string();
 
         let parsed_data = CSharpClass::from_json(&input, class_name).unwrap();
         let output = parsed_data.get_csharp_output().unwrap();
@@ -85,7 +85,7 @@ fn test_correct_bool_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "boolValue": false }"#);
     json_data.push(r#"{ "boolValue": true }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public bool BoolValue { get; set; }
 }"#;
@@ -100,7 +100,7 @@ fn test_correct_string_property() {
     json_data.push(r#"{ "stringValue": "" }"#);
     json_data.push(r#"{ "stringValue": "abc" }"#);
     json_data.push(r#"{ "stringValue": "test test" }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public string StringValue { get; set; }
 }"#;
@@ -116,7 +116,7 @@ fn test_correct_integer_property() {
     json_data.push(r#"{ "integerValue": 0 }"#);
     json_data.push(r#"{ "integerValue": 2147483647 }"#); // max int value
     json_data.push(r#"{ "integerValue": -2147483648 }"#); // min int value
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public int IntegerValue { get; set; }
 }"#;
@@ -128,12 +128,12 @@ fn test_correct_integer_property() {
 fn test_correct_object_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "val": { "doubleValue": 123.0 } }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
-    public ValClass Val { get; set; }
+    public Val Val { get; set; }
 }
 
-class ValClass
+class Val
 {
     public double DoubleValue { get; set; }
 }"#;
@@ -145,18 +145,18 @@ class ValClass
 fn test_correct_object_list_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "users": [{ "userId": 0, "orders": [ { "orderId": 0 } ]}] }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
-    public List<UsersClass> Users { get; set; }
+    public List<Users> Users { get; set; }
 }
 
-class UsersClass
+class Users
 {
     public int UserId { get; set; }
-    public List<OrdersClass> Orders { get; set; }
+    public List<Orders> Orders { get; set; }
 }
 
-class OrdersClass
+class Orders
 {
     public int OrderId { get; set; }
 }"#;
@@ -169,7 +169,7 @@ fn test_correct_long_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "longValue": 2147483648 }"#); // max int value+1
     json_data.push(r#"{ "longValue": -2147483649 }"#); // min int value-1
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public long LongValue { get; set; }
 }"#;
@@ -183,7 +183,7 @@ fn test_correct_double_property() {
     json_data.push(r#"{ "doubleValue": 0.0 }"#);
     json_data.push(r#"{ "doubleValue": -1.0 }"#);
     json_data.push(r#"{ "doubleValue": 1.0 }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public double DoubleValue { get; set; }
 }"#;
@@ -195,7 +195,7 @@ fn test_correct_double_property() {
 fn test_correct_null_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "nullValue": null }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public object? NullValue { get; set; }
 }"#;
@@ -207,7 +207,7 @@ fn test_correct_null_property() {
 fn test_correct_object_array_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "arrayValue": [] }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public List<object?> ArrayValue { get; set; }
 }"#;
@@ -221,7 +221,7 @@ fn test_correct_integer_array_property() {
     json_data.push(r#"{ "arrayValue": [1, 2, 3] }"#);
     json_data.push(r#"{ "arrayValue": [-1, -2, -3] }"#);
     json_data.push(r#"{ "arrayValue": [1] }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public List<int> ArrayValue { get; set; }
 }"#;
@@ -237,7 +237,7 @@ fn test_correct_long_array_property() {
     json_data.push(r#"{ "arrayValue": [2147483648, -2147483649] }"#);
     json_data.push(r#"{ "arrayValue": [-2147483649, 1, 3] }"#);
     json_data.push(r#"{ "arrayValue": [1, 2, -2147483649] }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public List<long> ArrayValue { get; set; }
 }"#;
@@ -253,7 +253,7 @@ fn test_correct_double_array_property() {
     json_data.push(r#"{ "arrayValue": [-3648.99] }"#);
     json_data.push(r#"{ "arrayValue": [0.9999999, 0.00000001] }"#);
     json_data.push(r#"{ "arrayValue": [0.0000001] }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public List<double> ArrayValue { get; set; }
 }"#;
@@ -267,7 +267,7 @@ fn test_correct_bool_array_property() {
     json_data.push(r#"{ "arrayValue": [true, false] }"#);
     json_data.push(r#"{ "arrayValue": [false] }"#);
     json_data.push(r#"{ "arrayValue": [true] }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public List<bool> ArrayValue { get; set; }
 }"#;
@@ -280,7 +280,7 @@ fn test_correct_bool_array_property() {
 /// This should panic as we can't mix long and double in array
 fn test_array_long_then_double() {
     let json = r#"{ "arrayValue": [2147483648, 1.0] }"#.to_string();
-    let parsed = match CSharpClass::from_json(&json, "TestClass".to_string()) {
+    let parsed = match CSharpClass::from_json(&json, "Test".to_string()) {
         Ok(v) => v,
         Err(_) => return, // if we can't parse it, return (triggering error as this function expects panic)
     };
@@ -292,7 +292,7 @@ fn test_array_long_then_double() {
 /// This should panic as we can't mix double and long in array
 fn test_array_double_then_long() {
     let json = r#"{ "arrayValue": [1.0, 2147483648] }"#.to_string();
-    let parsed = match CSharpClass::from_json(&json, "TestClass".to_string()) {
+    let parsed = match CSharpClass::from_json(&json, "Test".to_string()) {
         Ok(v) => v,
         Err(_) => return, // if we can't parse it, return (triggering error as this function expects panic)
     };
@@ -305,7 +305,7 @@ fn test_very_large_number_panics() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "value": 12344567891243456789 }"#);
     json_data.push(r#"{ "value": -12344567891243456789 }"#);
-    let expected_output = r#"class TestClass
+    let expected_output = r#"class Test
 {
     public double Value { get; set; }
 }"#;

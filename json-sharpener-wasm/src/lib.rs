@@ -2,8 +2,8 @@ use json_sharpener::CSharpClass;
 use wasm_bindgen::prelude::wasm_bindgen;
 
 #[wasm_bindgen]
-pub fn convert_json_to_csharp(json: &str) -> String {
-    let parsed = CSharpClass::from_json(&json.to_string(), "MyClass".to_string());
+pub fn convert_json_to_csharp(json: &str, class_name: &str) -> String {
+    let parsed = CSharpClass::from_json(&json.to_string(), class_name.to_string());
     match parsed {
         Ok(v) => match v.get_csharp_output() {
             Ok(vv) => vv,
@@ -16,7 +16,7 @@ pub fn convert_json_to_csharp(json: &str) -> String {
 #[wasm_bindgen]
 /// Returns error string if error occured, otherwise an empty string
 pub fn convert_json_to_csharp_error(json: &str) -> String {
-    let parsed = CSharpClass::from_json(&json.to_string(), "MyClass".to_string());
+    let parsed = CSharpClass::from_json(&json.to_string(), "".to_string());
     match parsed {
         Ok(v) => match v.get_csharp_output() {
             Ok(_vv) => String::new(),
