@@ -142,6 +142,29 @@ class ValClass
 }
 
 #[test]
+fn test_correct_object_list_property() {
+    let mut json_data: Vec<&str> = Vec::new();
+    json_data.push(r#"{ "users": [{ "userId": 0, "orders": [ { "orderId": 0 } ]}]"#);
+    let expected_output = r#"class TestClass
+{
+    public UsersClass[] Users { get; set; }
+}
+
+class UsersClass
+{
+    public int UserId { get; set; }
+    public OrdersClass[] Orders { get; set; }
+}
+
+class OrdersClass
+{
+    public int OrderId { get; set; }
+}"#;
+
+    bulk_parse_and_verify(json_data, &expected_output);
+}
+
+#[test]
 fn test_correct_long_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "longValue": 2147483648 }"#); // max int value+1
