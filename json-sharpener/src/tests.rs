@@ -144,7 +144,7 @@ class ValClass
 #[test]
 fn test_correct_object_list_property() {
     let mut json_data: Vec<&str> = Vec::new();
-    json_data.push(r#"{ "users": [{ "userId": 0, "orders": [ { "orderId": 0 } ]}]"#);
+    json_data.push(r#"{ "users": [{ "userId": 0, "orders": [ { "orderId": 0 } ]}] }"#);
     let expected_output = r#"class TestClass
 {
     public UsersClass[] Users { get; set; }
