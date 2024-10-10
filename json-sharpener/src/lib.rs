@@ -223,7 +223,7 @@ impl CSharpClass {
     fn get_array_type(field_name: &String, values: &Vec<Value>) -> Result<String, String> {
         if values.iter().count() == 0 {
             // Can't infer type
-            return Ok("object?[]".to_string());
+            return Ok("List<object?>".to_string());
         }
 
         // Get first element of array
@@ -236,7 +236,7 @@ impl CSharpClass {
             _ => false,
         } {
             return Ok(format!(
-                "{}[]",
+                "List<{}>",
                 CSharpClass::get_type_from_value(field_name, first_elem).unwrap()
             ));
         }
@@ -264,7 +264,7 @@ impl CSharpClass {
 
         // If all values equal, we know the type
         if all_equal {
-            return Ok(format!("{}[]", first_elem_type));
+            return Ok(format!("List<{}>", first_elem_type));
         }
 
         // At this point, we can parse all types, but they are not equal
@@ -288,11 +288,11 @@ impl CSharpClass {
                 return Err("Can't mix double and long/int in array".to_string());
             }
 
-            return Ok("double[]".to_string());
+            return Ok("List<double>".to_string());
         } else if long_found {
-            return Ok("long[]".to_string());
+            return Ok("List<long>".to_string());
         } else if int_found {
-            return Ok("int[]".to_string());
+            return Ok("List<int>".to_string());
         } else {
             return Err("Could not deduce numeric type".to_string());
         }

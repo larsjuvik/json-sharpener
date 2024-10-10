@@ -147,13 +147,13 @@ fn test_correct_object_list_property() {
     json_data.push(r#"{ "users": [{ "userId": 0, "orders": [ { "orderId": 0 } ]}] }"#);
     let expected_output = r#"class TestClass
 {
-    public UsersClass[] Users { get; set; }
+    public List<UsersClass> Users { get; set; }
 }
 
 class UsersClass
 {
     public int UserId { get; set; }
-    public OrdersClass[] Orders { get; set; }
+    public List<OrdersClass> Orders { get; set; }
 }
 
 class OrdersClass
@@ -209,7 +209,7 @@ fn test_correct_object_array_property() {
     json_data.push(r#"{ "arrayValue": [] }"#);
     let expected_output = r#"class TestClass
 {
-    public object?[] ArrayValue { get; set; }
+    public List<object?> ArrayValue { get; set; }
 }"#;
 
     bulk_parse_and_verify(json_data, &expected_output);
@@ -223,7 +223,7 @@ fn test_correct_integer_array_property() {
     json_data.push(r#"{ "arrayValue": [1] }"#);
     let expected_output = r#"class TestClass
 {
-    public int[] ArrayValue { get; set; }
+    public List<int> ArrayValue { get; set; }
 }"#;
 
     bulk_parse_and_verify(json_data, &expected_output);
@@ -239,7 +239,7 @@ fn test_correct_long_array_property() {
     json_data.push(r#"{ "arrayValue": [1, 2, -2147483649] }"#);
     let expected_output = r#"class TestClass
 {
-    public long[] ArrayValue { get; set; }
+    public List<long> ArrayValue { get; set; }
 }"#;
 
     bulk_parse_and_verify(json_data, &expected_output);
@@ -255,7 +255,7 @@ fn test_correct_double_array_property() {
     json_data.push(r#"{ "arrayValue": [0.0000001] }"#);
     let expected_output = r#"class TestClass
 {
-    public double[] ArrayValue { get; set; }
+    public List<double> ArrayValue { get; set; }
 }"#;
 
     bulk_parse_and_verify(json_data, &expected_output);
@@ -269,7 +269,7 @@ fn test_correct_bool_array_property() {
     json_data.push(r#"{ "arrayValue": [true] }"#);
     let expected_output = r#"class TestClass
 {
-    public bool[] ArrayValue { get; set; }
+    public List<bool> ArrayValue { get; set; }
 }"#;
 
     bulk_parse_and_verify(json_data, &expected_output);
