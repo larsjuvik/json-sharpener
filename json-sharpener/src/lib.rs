@@ -32,7 +32,7 @@ impl CSharpClass {
 
         // Check if the root value is just an array
         if properties.is_array() {
-            return CSharpClass::get_array_type(properties.as_array().unwrap());
+            return CSharpClass::get_array_type(&String::new(), properties.as_array().unwrap());
         }
 
         // Check if the root value is just a type
@@ -79,7 +79,37 @@ impl CSharpClass {
         let mut class_names_and_values: Vec<(String, &Value)> = Vec::new();
 
         for (field_name, field_value) in root_object {
+            // Get the object, or the array object as objects can be within arrays
+
+            if field_value.is_array() {
+                // Check if first type is obj
+                let arr = field_value.as_array().unwrap();
+                if arr.iter().count() > 0 {
+                    let first_elem = match arr.iter().nth(0) {
+                        Some(v) => v,
+                        None => return Err("Could not parse first element in array".to_string()),
+                    };
+                    match first_elem {
+                        Value::Object(o) => {
+                            // Add sub objects to result
+                            let sub_objects =
+                                CSharpClass::get_class_names_and_values(o, current_depth + 1)
+                                    .unwrap();
+
+                            // TODO: here, if the field_name ends in "s", maybe take it away
+                            // That way we get "User" instead of "Users" for class name
+                            class_names_and_values.push((field_name.to_string(), &first_elem));
+                            for sub_obj in sub_objects {
+                                class_names_and_values.push(sub_obj);
+                            }
+                        }
+                        _ => {}
+                    }
+                }
+            }
+
             if field_value.is_object() {
+                // We have assigned a object to it
                 // Add object to list
                 let field_value_as_obj = field_value.as_object().unwrap();
                 class_names_and_values.push((field_name.to_string(), &field_value));
@@ -123,6 +153,9 @@ impl CSharpClass {
 
     /// Creates capitalized [String]
     fn capitalized(val: &String) -> Result<String, String> {
+        if val.len() == 0 {
+            return Ok(String::new());
+        }
         let first_char_uppercase = match val.chars().nth(0) {
             Some(v) => v.to_uppercase(),
             None => return Err(format!("Could not find first char of \"{}\"", val)),
@@ -156,7 +189,7 @@ impl CSharpClass {
             Value::Bool(_b) => Ok("bool".to_string()),
             Value::Number(n) => CSharpClass::get_type_from_number_value(n),
             Value::String(_s) => Ok("string".to_string()),
-            Value::Array(a) => CSharpClass::get_array_type(a),
+            Value::Array(a) => CSharpClass::get_array_type(field_name, a),
             Value::Object(_o) => Ok(format!(
                 "{}Class",
                 CSharpClass::capitalized(field_name).unwrap()
@@ -187,7 +220,7 @@ impl CSharpClass {
     }
 
     /// Gets type from array with [Value]
-    fn get_array_type(values: &Vec<Value>) -> Result<String, String> {
+    fn get_array_type(field_name: &String, values: &Vec<Value>) -> Result<String, String> {
         if values.iter().count() == 0 {
             // Can't infer type
             return Ok("object?[]".to_string());
@@ -198,7 +231,17 @@ impl CSharpClass {
             Some(v) => v,
             None => return Err("Could not parse first element in array".to_string()),
         };
-        let first_elem_type = CSharpClass::get_type_from_value(&String::new(), first_elem)?;
+        if match first_elem {
+            Value::Object(o) => true,
+            _ => false,
+        } {
+            return Ok(format!(
+                "{}[]",
+                CSharpClass::get_type_from_value(field_name, first_elem).unwrap()
+            ));
+        }
+
+        let first_elem_type = CSharpClass::get_type_from_value(field_name, first_elem)?;
 
         // Check if all values can be parsed
         let all_types = values
