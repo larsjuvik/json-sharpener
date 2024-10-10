@@ -85,7 +85,7 @@ fn test_correct_bool_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "boolValue": false }"#);
     json_data.push(r#"{ "boolValue": true }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public bool BoolValue { get; set; }
 }"#;
@@ -100,7 +100,7 @@ fn test_correct_string_property() {
     json_data.push(r#"{ "stringValue": "" }"#);
     json_data.push(r#"{ "stringValue": "abc" }"#);
     json_data.push(r#"{ "stringValue": "test test" }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public string StringValue { get; set; }
 }"#;
@@ -116,7 +116,7 @@ fn test_correct_integer_property() {
     json_data.push(r#"{ "integerValue": 0 }"#);
     json_data.push(r#"{ "integerValue": 2147483647 }"#); // max int value
     json_data.push(r#"{ "integerValue": -2147483648 }"#); // min int value
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public int IntegerValue { get; set; }
 }"#;
@@ -128,12 +128,12 @@ fn test_correct_integer_property() {
 fn test_correct_object_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "val": { "doubleValue": 123.0 } }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public Val Val { get; set; }
 }
 
-class Val
+public class Val
 {
     public double DoubleValue { get; set; }
 }"#;
@@ -145,18 +145,18 @@ class Val
 fn test_correct_object_list_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "users": [{ "userId": 0, "orders": [ { "orderId": 0 } ]}] }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public List<Users> Users { get; set; }
 }
 
-class Users
+public class Users
 {
     public int UserId { get; set; }
     public List<Orders> Orders { get; set; }
 }
 
-class Orders
+public class Orders
 {
     public int OrderId { get; set; }
 }"#;
@@ -169,7 +169,7 @@ fn test_correct_long_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "longValue": 2147483648 }"#); // max int value+1
     json_data.push(r#"{ "longValue": -2147483649 }"#); // min int value-1
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public long LongValue { get; set; }
 }"#;
@@ -183,7 +183,7 @@ fn test_correct_double_property() {
     json_data.push(r#"{ "doubleValue": 0.0 }"#);
     json_data.push(r#"{ "doubleValue": -1.0 }"#);
     json_data.push(r#"{ "doubleValue": 1.0 }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public double DoubleValue { get; set; }
 }"#;
@@ -195,7 +195,7 @@ fn test_correct_double_property() {
 fn test_correct_null_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "nullValue": null }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public object? NullValue { get; set; }
 }"#;
@@ -207,7 +207,7 @@ fn test_correct_null_property() {
 fn test_correct_object_array_property() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "arrayValue": [] }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public List<object?> ArrayValue { get; set; }
 }"#;
@@ -221,7 +221,7 @@ fn test_correct_integer_array_property() {
     json_data.push(r#"{ "arrayValue": [1, 2, 3] }"#);
     json_data.push(r#"{ "arrayValue": [-1, -2, -3] }"#);
     json_data.push(r#"{ "arrayValue": [1] }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public List<int> ArrayValue { get; set; }
 }"#;
@@ -237,7 +237,7 @@ fn test_correct_long_array_property() {
     json_data.push(r#"{ "arrayValue": [2147483648, -2147483649] }"#);
     json_data.push(r#"{ "arrayValue": [-2147483649, 1, 3] }"#);
     json_data.push(r#"{ "arrayValue": [1, 2, -2147483649] }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public List<long> ArrayValue { get; set; }
 }"#;
@@ -253,7 +253,7 @@ fn test_correct_double_array_property() {
     json_data.push(r#"{ "arrayValue": [-3648.99] }"#);
     json_data.push(r#"{ "arrayValue": [0.9999999, 0.00000001] }"#);
     json_data.push(r#"{ "arrayValue": [0.0000001] }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public List<double> ArrayValue { get; set; }
 }"#;
@@ -267,7 +267,7 @@ fn test_correct_bool_array_property() {
     json_data.push(r#"{ "arrayValue": [true, false] }"#);
     json_data.push(r#"{ "arrayValue": [false] }"#);
     json_data.push(r#"{ "arrayValue": [true] }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public List<bool> ArrayValue { get; set; }
 }"#;
@@ -305,7 +305,7 @@ fn test_very_large_number_panics() {
     let mut json_data: Vec<&str> = Vec::new();
     json_data.push(r#"{ "value": 12344567891243456789 }"#);
     json_data.push(r#"{ "value": -12344567891243456789 }"#);
-    let expected_output = r#"class Test
+    let expected_output = r#"public class Test
 {
     public double Value { get; set; }
 }"#;

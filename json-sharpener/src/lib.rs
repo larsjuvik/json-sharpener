@@ -133,7 +133,7 @@ impl CSharpClass {
         let mut output = String::new();
 
         // Class decleration
-        let class_decleration: String = format!("class {}\n{{\n", class_name);
+        let class_decleration: String = format!("public class {}\n{{\n", class_name);
         output.push_str(class_decleration.as_str());
 
         // Add properties
