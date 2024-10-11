@@ -1,5 +1,12 @@
-# Stage 1: First stage builds the WASM library
-FROM rust:1.81 AS rust-base
+# Stage 1: Install npm deps
+FROM node:22-alpine AS frontend-deps
+WORKDIR /app
+
+COPY ./json-sharpener-web/*.json .
+RUN npm install
+
+# Stage 2: Builds the WASM library
+FROM rust:1.81 AS wasm-build
 WORKDIR /app
 
 # Install wasm-pack
@@ -10,24 +17,18 @@ COPY ./json-sharpener ./json-sharpener
 COPY ./json-sharpener-wasm ./json-sharpener-wasm
 RUN wasm-pack build --target web ./json-sharpener-wasm
 
-
-# Stage 2: Build Next.js application and include WASM library
-FROM node:22-alpine AS base
+# Build the client
+FROM frontend-deps AS frontend-and-wasm-build
 WORKDIR /app
 
-# Dependencies for Next.js app
-COPY ./json-sharpener-web/*.json .
-RUN npm install
-
 COPY ./json-sharpener-web/ .
-COPY --from=rust-base /app/json-sharpener-wasm/pkg/*.ts /app/json-sharpener-wasm/pkg/*.wasm /app/json-sharpener-wasm/pkg/*.js ./public/wasm/
+COPY --from=wasm-build /app/json-sharpener-wasm/pkg/* ./src/assets/wasm/
 
 # Build
-ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
-# Expose the Next.js default port
-EXPOSE 3000
-
-# Start the Next.js server
-CMD ["npm", "run", "start"]
+# Stage 3: Serve the static files with NGINX
+FROM nginx:alpine
+COPY --from=frontend-and-wasm-build /app/dist /usr/share/nginx/html
+EXPOSE 8080
+CMD ["nginx", "-g", "daemon off;"]
