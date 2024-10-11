@@ -1,12 +1,14 @@
 "use client";
-import { ChangeEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Editor from "react-simple-code-editor";
 import Prism, { highlight } from "prismjs";
 import "prismjs/themes/prism-okaidia.css";
 import "prismjs/components/prism-json";
 import "prismjs/components/prism-csharp";
+import { useJsonSharpener } from "./hooks/useJsonSharpener";
 
 export default function Home() {
+  const functions = useJsonSharpener();
   const [inputText, setInputText] = useState(`{
     "name": "Tester",
     "age": 25,
@@ -16,57 +18,10 @@ export default function Home() {
   const [outputText, setOutputText] = useState("");
   const [errorText, setErrorText] = useState<string | undefined>();
 
-  const [convertJsonToCSharp, setConvertJsonToCSharp] = useState<
-    undefined | ((json: string) => string)
-  >();
-  const [convertJsonToCSharpError, setConvertJsonToCSharpError] = useState<
-    undefined | ((json: string) => string)
-  >();
-
-  // Load WASM library
   useEffect(() => {
-    const loadWasm = async (): Promise<
-      | undefined
-      | {
-          convert: (json: string) => string;
-          convertError: (json: string) => string;
-        }
-    > => {
-      try {
-        const libraryModule = await import("@/public/wasm/json_sharpener_wasm");
-        const libUrl = "/wasm/json_sharpener_wasm_bg.wasm";
-        await libraryModule.default(libUrl);
-        return {
-          convert: libraryModule.convert_json_to_csharp,
-          convertError: libraryModule.convert_json_to_csharp_error,
-        };
-      } catch (error) {
-        console.error("Failed to load WASM module", error);
-      }
-    };
-
-    loadWasm().then((r) => {
-      if (r !== undefined) {
-        setConvertJsonToCSharp(() => r.convert);
-        setConvertJsonToCSharpError(() => r.convertError);
-        setOutputText(r.convert(inputText));
-      }
-    });
-  }, []);
-
-  useEffect(() => {
-    if (convertJsonToCSharp === undefined) return;
-    if (convertJsonToCSharpError === undefined) return;
-
-    const csharpText = convertJsonToCSharp(inputText);
-    if (!csharpText && inputText) {
-      // Conversion not available
-      setOutputText("Enter valid JSON");
-    } else {
-      setOutputText(csharpText);
-    }
-
-    setErrorText(convertJsonToCSharpError(inputText) ?? "");
+    if (functions === undefined) return;
+    setOutputText(functions.convertJsonToCSharp(inputText, "TestClass"));
+    setErrorText(functions.convertJsonToCSharpError(inputText));
   }, [inputText]);
 
   return (
@@ -94,7 +49,7 @@ export default function Home() {
           <Editor
             className="border-2 border-slate-700 rounded flex-1 bg-slate-800"
             value={outputText}
-            onValueChange={(code) => setOutputText(code)}
+            onValueChange={(_) => {}}
             highlight={(code) =>
               Prism.highlight(code, Prism.languages.csharp, "csharp")
             }
