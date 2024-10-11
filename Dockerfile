@@ -30,5 +30,5 @@ RUN npm run build
 # Stage 3: Serve the static files with NGINX
 FROM nginx:alpine
 COPY --from=frontend-and-wasm-build /app/dist /usr/share/nginx/html
-EXPOSE 8080
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
