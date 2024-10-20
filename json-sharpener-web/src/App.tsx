@@ -18,11 +18,19 @@ export default function Home() {
   const [outputText, setOutputText] = useState("");
   const [errorText, setErrorText] = useState<string | undefined>();
 
+  // When input text changes
   useEffect(() => {
     if (functions === undefined) return;
     setOutputText(functions.convertJsonToCSharp(inputText, "TestClass"));
     setErrorText(functions.convertJsonToCSharpError(inputText));
   }, [inputText]);
+
+  // When library is loaded
+  useEffect(() => {
+    if (functions === undefined) return;
+    setOutputText(functions.convertJsonToCSharp(inputText, "TestClass"));
+    setErrorText(functions.convertJsonToCSharpError(inputText));
+  }, [functions]);
 
   return (
     <div className="ms-auto me-auto flex flex-col items-center justify-items-between h-full p-8 pb-0 gap-16 sm:p-10 sm:pb-0 max-w-6xl">
@@ -34,7 +42,7 @@ export default function Home() {
             <span className="text-blue-700">WebAssembly</span>
           </h2>
         </div>
-        <div className="flex flex-1 flex-col sm:flex-row items-stretch justify-between gap-5 md:gap-10">
+        <div className="flex flex-1 flex-col md:flex-row items-stretch justify-between gap-5 md:gap-10">
           <Editor
             className="border-2 border-slate-700 rounded flex-1 bg-slate-800"
             value={inputText}

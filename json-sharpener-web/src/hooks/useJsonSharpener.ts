@@ -15,17 +15,20 @@ export function useJsonSharpener(): JsonSharpenerFunctions | undefined {
 
   // Load WASM library
   useEffect(() => {
-    try {
-      init();
+    async function loadLibrary() {
+      try {
+        await init();
 
-      const loadedFunctions: JsonSharpenerFunctions = {
-        convertJsonToCSharp: convert_json_to_csharp,
-        convertJsonToCSharpError: convert_json_to_csharp_error,
-      };
-      setFunctions(loadedFunctions);
-    } catch (error) {
-      console.error("Failed to load WASM module", error);
+        const loadedFunctions: JsonSharpenerFunctions = {
+          convertJsonToCSharp: convert_json_to_csharp,
+          convertJsonToCSharpError: convert_json_to_csharp_error,
+        };
+        setFunctions(loadedFunctions);
+      } catch (error) {
+        console.error("Failed to load WASM module", error);
+      }
     }
+    loadLibrary();
   }, []);
 
   return functions;
