@@ -34,7 +34,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen min-w-full text-slate-300 bg-slate-900 flex flex-col items-center justify-items-between h-full p-8 pb-0 gap-16 sm:p-10 sm:pb-0 max-w-6xl">
-      <main className="w-full flex flex-col gap-8 row-start-2 items-stretch">
+      <main className="w-full max-w-screen-lg flex flex-col gap-8 row-start-2 items-stretch">
         <div>
           <h1 className="text-2xl font-extrabold">JSON Sharpener</h1>
           <h2 className="text-md font-semibold">
@@ -51,7 +51,7 @@ export default function Home() {
           {errorText}
         </p>
         <div className="flex flex-1 flex-col lg:flex-row items-stretch justify-between gap-6 md:gap-10">
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-auto flex-col gap-2">
             <div className="flex flex-row justify-between">
               <h3 className="text-xl font-bold">JSON</h3>
               <button
@@ -74,7 +74,7 @@ export default function Home() {
               }}
             />
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-auto flex-col gap-2">
             <div className="flex flex-row justify-between">
               <h3 className="text-xl font-bold">C#</h3>
               <button
