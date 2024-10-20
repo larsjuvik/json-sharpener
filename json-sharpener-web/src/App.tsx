@@ -6,8 +6,12 @@ import "prismjs/themes/prism-okaidia.css";
 import "prismjs/components/prism-json";
 import "prismjs/components/prism-csharp";
 import { useJsonSharpener } from "./hooks/useJsonSharpener";
+import { Button } from "./components/ui/button";
+import { useToast } from "./hooks/use-toast";
 
 export default function Home() {
+  const { toast } = useToast();
+
   const functions = useJsonSharpener();
   const [inputText, setInputText] = useState(`{
     "name": "Tester",
@@ -32,6 +36,14 @@ export default function Home() {
     setErrorText(functions.convertJsonToCSharpError(inputText));
   }, [functions]);
 
+  function addToClipboard(val: string, desc: string): void {
+    navigator.clipboard.writeText(val);
+    toast({
+      title: "Added to clipboard",
+      description: desc,
+    });
+  }
+
   return (
     <div className="min-h-screen min-w-full text-slate-300 bg-slate-900 flex flex-col items-center justify-items-between h-full p-8 pb-0 gap-16 sm:p-10 sm:pb-0 max-w-6xl">
       <main className="w-full max-w-screen-lg flex flex-col gap-8 row-start-2 items-stretch">
@@ -50,15 +62,15 @@ export default function Home() {
           }>
           {errorText}
         </p>
-        <div className="flex flex-1 flex-col lg:flex-row items-stretch justify-between gap-6 md:gap-10">
+        <div className="flex flex-1 flex-col md:flex-row items-stretch justify-between gap-6 md:gap-10">
           <div className="flex flex-auto flex-col gap-2">
             <div className="flex flex-row justify-between">
               <h3 className="text-xl font-bold">JSON</h3>
-              <button
-                onClick={() => navigator.clipboard.writeText(inputText)}
-                className="bg-slate-600 rounded-md px-1">
+              <Button
+                onClick={() => addToClipboard(inputText, "JSON code added")}
+                className="bg-slate-800 rounded-md px-2">
                 Copy
-              </button>
+              </Button>
             </div>
             <Editor
               className="border-2 border-slate-700 rounded flex-1 bg-slate-800"
@@ -77,11 +89,11 @@ export default function Home() {
           <div className="flex flex-auto flex-col gap-2">
             <div className="flex flex-row justify-between">
               <h3 className="text-xl font-bold">C#</h3>
-              <button
-                onClick={() => navigator.clipboard.writeText(outputText)}
-                className="bg-slate-600 rounded-md px-1">
+              <Button
+                onClick={() => addToClipboard(outputText, "C# code added")}
+                className="bg-slate-800 rounded-md px-2">
                 Copy
-              </button>
+              </Button>
             </div>
             <Editor
               className={
