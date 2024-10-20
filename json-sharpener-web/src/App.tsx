@@ -33,16 +33,24 @@ export default function Home() {
   }, [functions]);
 
   return (
-    <div className="ms-auto me-auto flex flex-col items-center justify-items-between h-full p-8 pb-0 gap-16 sm:p-10 sm:pb-0 max-w-6xl">
+    <div className="min-h-screen min-w-full text-slate-300 bg-slate-900 flex flex-col items-center justify-items-between h-full p-8 pb-0 gap-16 sm:p-10 sm:pb-0 max-w-6xl">
       <main className="w-full flex flex-col gap-8 row-start-2 items-stretch">
         <div>
-          <h1 className="text-lg">JSON Sharpener</h1>
-          <h2 className=" text-sm">
+          <h1 className="text-2xl font-extrabold">JSON Sharpener</h1>
+          <h2 className="text-md font-semibold">
             Powered by <span className="text-orange-700">Rust</span> and{" "}
             <span className="text-blue-700">WebAssembly</span>
           </h2>
         </div>
-        <div className="flex flex-1 flex-col md:flex-row items-stretch justify-between gap-5 md:gap-10">
+        <p
+          className={
+            errorText
+              ? "bg-slate-800 p-3 font-semibold rounded-md text-amber-700"
+              : "hidden"
+          }>
+          {errorText}
+        </p>
+        <div className="flex flex-1 flex-col lg:flex-row items-stretch justify-between gap-5 md:gap-10">
           <Editor
             className="border-2 border-slate-700 rounded flex-1 bg-slate-800"
             value={inputText}
@@ -51,11 +59,15 @@ export default function Home() {
             padding={10}
             style={{
               fontFamily: "monospace",
-              fontSize: 12,
+              fontSize: 14,
             }}
           />
           <Editor
-            className="border-2 border-slate-700 rounded flex-1 bg-slate-800"
+            className={
+              !errorText
+                ? "border-2 border-slate-700 rounded flex-1 bg-slate-800"
+                : "hidden"
+            }
             value={outputText}
             onValueChange={(_) => {}}
             highlight={(code) =>
@@ -64,11 +76,10 @@ export default function Home() {
             padding={10}
             style={{
               fontFamily: "monospace",
-              fontSize: 12,
+              fontSize: 14,
             }}
           />
         </div>
-        <p className="text-amber-700">{errorText}</p>
       </main>
       <footer className="w-full text-white py-2 text-center mt-auto">
         <p className="text-xs">
