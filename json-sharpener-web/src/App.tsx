@@ -50,35 +50,57 @@ export default function Home() {
           }>
           {errorText}
         </p>
-        <div className="flex flex-1 flex-col lg:flex-row items-stretch justify-between gap-5 md:gap-10">
-          <Editor
-            className="border-2 border-slate-700 rounded flex-1 bg-slate-800"
-            value={inputText}
-            onValueChange={(code) => setInputText(code)}
-            highlight={(code) => highlight(code, Prism.languages.json, "json")}
-            padding={10}
-            style={{
-              fontFamily: "monospace",
-              fontSize: 14,
-            }}
-          />
-          <Editor
-            className={
-              !errorText
-                ? "border-2 border-slate-700 rounded flex-1 bg-slate-800"
-                : "hidden"
-            }
-            value={outputText}
-            onValueChange={(_) => {}}
-            highlight={(code) =>
-              Prism.highlight(code, Prism.languages.csharp, "csharp")
-            }
-            padding={10}
-            style={{
-              fontFamily: "monospace",
-              fontSize: 14,
-            }}
-          />
+        <div className="flex flex-1 flex-col lg:flex-row items-stretch justify-between gap-6 md:gap-10">
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-row justify-between">
+              <h3 className="text-xl font-bold">JSON</h3>
+              <button
+                onClick={() => navigator.clipboard.writeText(inputText)}
+                className="bg-slate-600 rounded-md px-1">
+                Copy
+              </button>
+            </div>
+            <Editor
+              className="border-2 border-slate-700 rounded flex-1 bg-slate-800"
+              value={inputText}
+              onValueChange={(code) => setInputText(code)}
+              highlight={(code) =>
+                highlight(code, Prism.languages.json, "json")
+              }
+              padding={10}
+              style={{
+                fontFamily: "monospace",
+                fontSize: 14,
+              }}
+            />
+          </div>
+          <div className="flex flex-col gap-2">
+            <div className="flex flex-row justify-between">
+              <h3 className="text-xl font-bold">C#</h3>
+              <button
+                onClick={() => navigator.clipboard.writeText(outputText)}
+                className="bg-slate-600 rounded-md px-1">
+                Copy
+              </button>
+            </div>
+            <Editor
+              className={
+                !errorText
+                  ? "border-2 border-slate-700 rounded flex-1 bg-slate-800"
+                  : "hidden"
+              }
+              value={outputText}
+              onValueChange={(_) => {}}
+              highlight={(code) =>
+                Prism.highlight(code, Prism.languages.csharp, "csharp")
+              }
+              padding={10}
+              style={{
+                fontFamily: "monospace",
+                fontSize: 14,
+              }}
+            />
+          </div>
         </div>
       </main>
       <footer className="w-full text-white py-2 text-center mt-auto">
