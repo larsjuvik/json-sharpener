@@ -14,10 +14,14 @@ export default function Home() {
 
   const functions = useJsonSharpener();
   const [inputText, setInputText] = useState(`{
-    "name": "Tester",
+    "guest": "Jason",
     "age": 25,
-    "isHappy": true,
-    "dinners": ["pizza", "taco"]
+    "hungry": true,
+    "order": ["pizza", "taco"],
+    "payment": {
+      "amount": 123.5,
+      "card": true
+    }
 }`);
   const [outputText, setOutputText] = useState("");
   const [errorText, setErrorText] = useState<string | undefined>();
