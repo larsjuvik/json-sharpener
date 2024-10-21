@@ -22,7 +22,7 @@ impl CSharpClass {
     fn get_parsed_properties(raw_json: &String) -> Result<Value, String> {
         match serde_json::from_str(raw_json) {
             Ok(v) => Ok(v),
-            Err(e) => Err(format!("Could not parse file. Reason: {}", e.to_string())),
+            Err(e) => Err(format!("Could not parse content: {}", e.to_string())),
         }
     }
 
