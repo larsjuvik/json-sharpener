@@ -28,7 +28,6 @@ COPY --from=wasm-build /app/json-sharpener-wasm/pkg/* ./src/assets/wasm/
 RUN npm run build
 
 # Stage 3: Serve the static files with NGINX
-# TODO: this stage should probably be configured, now it's barebone / not production ready
 FROM nginx:alpine
 COPY --from=frontend-and-wasm-build /app/dist /usr/share/nginx/html
 EXPOSE 80
