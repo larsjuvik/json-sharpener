@@ -1,5 +1,7 @@
 use serde_json::{Map, Number, Value};
 
+const MAX_JSON_DEPTH: u8 = 10;
+
 pub struct CSharpClass {
     class_name: String,
     properties: Value,
@@ -22,7 +24,7 @@ impl CSharpClass {
     fn get_parsed_properties(raw_json: &String) -> Result<Value, String> {
         match serde_json::from_str(raw_json) {
             Ok(v) => Ok(v),
-            Err(e) => Err(format!("Could not parse file. Reason: {}", e.to_string())),
+            Err(e) => Err(format!("Could not parse content: {}", e.to_string())),
         }
     }
 
@@ -73,8 +75,12 @@ impl CSharpClass {
         root_object: &Map<String, Value>,
         current_depth: u32,
     ) -> Result<Vec<(String, &Value)>, String> {
-        if current_depth >= 10 {
-            return Err("Reached maximum depth on objects in JSON".to_string());
+        if current_depth > MAX_JSON_DEPTH.into() {
+            return Err(format!(
+                "Reached maximum depth on objects in JSON ({})",
+                MAX_JSON_DEPTH
+            )
+            .to_string());
         }
         let mut class_names_and_values: Vec<(String, &Value)> = Vec::new();
 
@@ -229,7 +235,7 @@ impl CSharpClass {
             None => return Err("Could not parse first element in array".to_string()),
         };
         if match first_elem {
-            Value::Object(o) => true,
+            Value::Object(_o) => true,
             _ => false,
         } {
             return Ok(format!(
