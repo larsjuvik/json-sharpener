@@ -39,17 +39,10 @@ docker run -p 8080:80 json-sharpener-web
 
 #### Without Docker
 
-Build the WASM library:
-
-```bash
-wasm-pack build --target web ./json-sharpener-wasm
-mkdir -p ./json-sharpener-web/src/assets/wasm/
-cp ./json-sharpener-wasm/pkg/* ./json-sharpener-web/src/assets/wasm/
-```
-
-Run the application (dev mode):
+Run application (dev mode):
 
 ```bash
 cd ./json-sharpener-web/
+npm run build-wasm
 npm run dev
 ```
