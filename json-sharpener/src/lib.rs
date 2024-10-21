@@ -235,7 +235,7 @@ impl CSharpClass {
             None => return Err("Could not parse first element in array".to_string()),
         };
         if match first_elem {
-            Value::Object(o) => true,
+            Value::Object(_o) => true,
             _ => false,
         } {
             return Ok(format!(
