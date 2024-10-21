@@ -37,6 +37,14 @@ export default function Home() {
   }, [functions]);
 
   function addToClipboard(val: string, desc: string): void {
+    if (!window.isSecureContext) {
+      toast({
+        title: "An error occurred",
+        description: "Using clipboard requires a secure origin",
+        variant: "destructive",
+      });
+      return;
+    }
     navigator.clipboard.writeText(val);
     toast({
       title: "Added to clipboard",
