@@ -33,11 +33,6 @@ jobs:
         working-directory: ./json-sharpener-web
         run: mkdir -p ./src/assets/wasm/ && cp ../json-sharpener-wasm/pkg/* ./src/assets/wasm/
 
-      - name: Setup Node.js environment
-        uses: actions/setup-node@v4.0.4
-        with:
-          node-version: 20
-
       - name: Azure Static Web Apps Deploy
         uses: Azure/static-web-apps-deploy@v1
         with:
