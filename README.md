@@ -1,7 +1,6 @@
 # JSON Sharpener {⚡️}
 
 [![Build and Tests](https://github.com/larsjuvik/json-sharpener/actions/workflows/CI.yml/badge.svg)](https://github.com/larsjuvik/json-sharpener/actions/workflows/CI.yml)
-
 [![Deployment](https://github.com/larsjuvik/json-sharpener/actions/workflows/CD.yml/badge.svg)](https://github.com/larsjuvik/json-sharpener/actions/workflows/CD.yml)
 
 Sharpen your JSON files with `json-sharpener` - a `library`/`CLI-tool`/`webpage` for easy conversions to `C#` classes.
