@@ -3,11 +3,11 @@
 [![Build and Tests](https://github.com/larsjuvik/json-sharpener/actions/workflows/CI.yml/badge.svg)](https://github.com/larsjuvik/json-sharpener/actions/workflows/CI.yml)
 [![Deployment](https://github.com/larsjuvik/json-sharpener/actions/workflows/CD.yml/badge.svg)](https://github.com/larsjuvik/json-sharpener/actions/workflows/CD.yml)
 
-Sharpen your JSON files with `json-sharpener` - a `library`/`CLI-tool`/`webpage` for easy conversions to `C#` classes.
+Sharpen your JSON files with `json-sharpener` - a `library`/`CLI-tool`/`webpage` for easy JSON to `C#` converison.
 
 ![Screenshot of the web application](./res/screenshot-web-app.png)
 
-## Overview
+## Folders :file_folder:
 
 - `json-sharpener` - the core library for parsing JSON to C#
 - `json-sharpener-terminal` - terminal parser that uses the core library
@@ -16,7 +16,7 @@ Sharpen your JSON files with `json-sharpener` - a `library`/`CLI-tool`/`webpage`
 
 ## Run :rocket:
 
-### Terminal
+### Terminal Application
 
 ```bash
 cargo build --release -p json-sharpener-terminal  # build
@@ -30,7 +30,7 @@ you can use this one-liner:
 cargo run --release -- -f YOUR_TEST_FILE.json
 ```
 
-### Web
+### Web Application
 
 #### Docker
 
