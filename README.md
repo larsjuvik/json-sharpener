@@ -5,6 +5,8 @@
 
 Sharpen your JSON files with `json-sharpener` - a `library`/`CLI-tool`/`webpage` for easy conversions to `C#` classes.
 
+![Screenshot of the web application](./res/screenshot-web-app.png)
+
 ## Overview
 
 - `json-sharpener` - the core library for parsing JSON to C#
