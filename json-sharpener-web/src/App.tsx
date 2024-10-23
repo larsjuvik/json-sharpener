@@ -57,11 +57,11 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen min-w-full text-slate-300 bg-slate-900 flex flex-col items-center justify-items-between h-full p-8 pb-0 gap-16 sm:p-10 sm:pb-0 max-w-6xl">
-      <main className="w-full max-w-screen-lg flex flex-col gap-8 row-start-2 items-stretch">
+    <div className="flex flex-col items-center h-full max-w-6xl min-w-full min-h-screen gap-16 p-8 pb-0 text-slate-300 bg-slate-900 justify-items-between sm:p-10 sm:pb-0">
+      <main className="flex flex-col items-stretch w-full max-w-screen-lg row-start-2 gap-8">
         <div>
           <h1 className="text-2xl font-extrabold">JSON Sharpener</h1>
-          <h2 className="text-md font-semibold">
+          <h2 className="font-semibold text-md">
             Powered by <span className="text-orange-700">Rust</span> and{" "}
             <span className="text-blue-700">WebAssembly</span>
           </h2>
@@ -74,18 +74,18 @@ export default function Home() {
           }>
           {errorText}
         </p>
-        <div className="flex flex-1 flex-col md:flex-row items-stretch justify-between gap-6 md:gap-10">
-          <div className="flex flex-auto flex-col gap-2">
+        <div className="flex flex-col items-stretch justify-between flex-1 gap-6 md:flex-row md:gap-10">
+          <div className="flex flex-col flex-auto gap-2">
             <div className="flex flex-row justify-between">
               <h3 className="text-xl font-bold">JSON</h3>
               <Button
                 onClick={() => addToClipboard(inputText, "JSON code added")}
-                className="bg-slate-800 rounded-md px-2">
+                className="px-2 rounded-md bg-slate-800">
                 Copy
               </Button>
             </div>
             <Editor
-              className="border-2 border-slate-700 rounded flex-1 bg-slate-800"
+              className="flex-1 border-2 !text-xs md:!text-sm lg:!text-base rounded border-slate-700 bg-slate-800"
               value={inputText}
               onValueChange={(code) => setInputText(code)}
               highlight={(code) =>
@@ -98,19 +98,19 @@ export default function Home() {
               }}
             />
           </div>
-          <div className="flex flex-auto flex-col gap-2">
+          <div className="flex flex-col flex-auto gap-2">
             <div className="flex flex-row justify-between">
               <h3 className="text-xl font-bold">C#</h3>
               <Button
                 onClick={() => addToClipboard(outputText, "C# code added")}
-                className="bg-slate-800 rounded-md px-2">
+                className="px-2 rounded-md bg-slate-800">
                 Copy
               </Button>
             </div>
             <Editor
               className={
                 !errorText
-                  ? "border-2 border-slate-700 rounded flex-1 bg-slate-800"
+                  ? "border-2 !text-xs md:!text-sm lg:!text-base border-slate-700 rounded flex-1 bg-slate-800"
                   : "hidden"
               }
               value={outputText}
@@ -127,7 +127,7 @@ export default function Home() {
           </div>
         </div>
       </main>
-      <footer className="w-full text-white py-2 text-center mt-auto">
+      <footer className="w-full py-2 mt-auto text-center text-white">
         <p className="text-xs">
           © 2024 JSON Sharpener. All rights reserved.{" "}
           <span
