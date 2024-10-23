@@ -14,32 +14,33 @@ Sharpen your JSON files with `json-sharpener` - a `library`/`CLI-tool`/`web-app`
 - `json-sharpener-wasm` - a WebAssembly wrapper around the core library
 - `json-sharpener-web` - website that uses the WebAssembly core library
 
-## Run :rocket:
-
-### Terminal Application
+## Terminal Application :rocket:
 
 ```bash
-cargo build --release -p json-sharpener-terminal  # build
-./target/release/json-sharpener-terminal -f YOUR_FILE_HERE
+Usage: json-sharpener [OPTIONS] <FILE>
+
+Examples:
+json-sharpener response.json
+json-sharpener --class-name Converted response.json
+json-sharpener --help
 ```
 
-If you don't want to build the program and then run it in separate steps,
-you can use this one-liner:
+### Build
 
 ```bash
-cargo run --release -- -f YOUR_TEST_FILE.json
+cargo build --release -p json-sharpener-terminal
 ```
 
-### Web Application
+## Web Application
 
-#### Docker
+### Docker :whale:
 
 ```bash
 docker build -t json-sharpener-web .
 docker run -p 8080:80 json-sharpener-web
 ```
 
-#### Without Docker
+### Without Docker
 
 Before running below step make sure the Rust compiler and `wasm-pack` is installed (used for building WASM library of `json-sharpener`).
 
