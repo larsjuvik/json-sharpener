@@ -41,7 +41,7 @@ docker run -p 8080:80 json-sharpener-web
 
 #### Without Docker
 
-To build the WASM library (used in web app), make sure you have Rust compiler and `wasm-pack` installed.
+Before running below step make sure the Rust compiler and `wasm-pack` is installed (used for building WASM library of `json-sharpener`).
 
 ```bash
 cd ./json-sharpener-web/
