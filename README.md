@@ -36,7 +36,6 @@ cargo run --release -- -f YOUR_TEST_FILE.json
 
 ```bash
 docker build -t json-sharpener-web .
-docker build --platform=linux/amd64 -t json-sharpener-web .  # if amd64 needed
 docker run -p 8080:80 json-sharpener-web
 ```
 
@@ -46,6 +45,5 @@ Run application (dev mode):
 
 ```bash
 cd ./json-sharpener-web/
-npm run build-wasm
-npm run dev
+npm run build-wasm && npm run dev
 ```
