@@ -12,7 +12,6 @@ use std::process::exit;
 )]
 struct Args {
     /// Path of the file to parse
-    #[arg(short, long)]
     file: String,
 
     /// Classname of the output class
