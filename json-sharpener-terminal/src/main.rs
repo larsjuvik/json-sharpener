@@ -29,15 +29,12 @@ fn main() {
     }
 
     let file_contents = fs::read_to_string(&args.file).expect("Could not read file");
-    println!("> {}", args.file);
-    println!("Contents:\n{}", file_contents);
-
     let parsed_contents = CSharpClass::from_json(&file_contents, args.class_name);
     match parsed_contents {
         Ok(v) => match v.get_csharp_output() {
-            Ok(vv) => println!("Parsed:\n{}", vv),
-            Err(e) => println!("Error: {}", e),
+            Ok(vv) => println!("{}", vv),
+            Err(e) => println!("{}", e),
         },
-        Err(e) => println!("Error: {}", e),
+        Err(e) => println!("{}", e),
     }
 }
